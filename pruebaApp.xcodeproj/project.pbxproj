@@ -12,6 +12,7 @@
 		888E980B2B94E102000907D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 888E980A2B94E102000907D8 /* Assets.xcassets */; };
 		888E980E2B94E102000907D8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 888E980D2B94E102000907D8 /* Preview Assets.xcassets */; };
 		9B5F24202BA38E2F00BD3CAB /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5F241F2BA38E2F00BD3CAB /* MenuView.swift */; };
+		9B5F24242BA3970900BD3CAB /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5F24232BA3970900BD3CAB /* ChatView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		888E980A2B94E102000907D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		888E980D2B94E102000907D8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9B5F241F2BA38E2F00BD3CAB /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		9B5F24232BA3970900BD3CAB /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +57,7 @@
 			children = (
 				888E98062B94E0FF000907D8 /* pruebaAppApp.swift */,
 				9B5F241F2BA38E2F00BD3CAB /* MenuView.swift */,
+				9B5F24232BA3970900BD3CAB /* ChatView.swift */,
 				888E98082B94E0FF000907D8 /* ContentView.swift */,
 				888E980A2B94E102000907D8 /* Assets.xcassets */,
 				888E980C2B94E102000907D8 /* Preview Content */,
@@ -140,6 +143,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B5F24242BA3970900BD3CAB /* ChatView.swift in Sources */,
 				888E98092B94E0FF000907D8 /* ContentView.swift in Sources */,
 				9B5F24202BA38E2F00BD3CAB /* MenuView.swift in Sources */,
 				888E98072B94E0FF000907D8 /* pruebaAppApp.swift in Sources */,
