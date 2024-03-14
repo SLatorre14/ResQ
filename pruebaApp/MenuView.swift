@@ -13,7 +13,7 @@ struct MenuView: View {
         VStack {
             ZStack{
                 RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
-                    .fill(Color("Color"))
+                    .fill(Color("LightWhite"))
                     .frame(width:290,height:40)
                 Text("Universidad de Los Andes Homepage")
                     .font(.caption)
