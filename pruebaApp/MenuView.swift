@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MenuView: View {
+    @State var isLoggedIn: Bool = false
     @State var toggleIsOn: Bool = true
     var body: some View {
         VStack {
@@ -132,7 +133,21 @@ struct MenuView: View {
         }
         .padding()
         
+        
     }
+       
     
 }
 
+struct MenuView_Previews: PreviewProvider {
+    static var previews: some View {
+        MenuView()
+    }
+}
+
+struct ScaleButtonStyle : ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View
+    {
+        configuration.label.scaleEffect(configuration.isPressed ? 2 : 1)
+    }
+}
