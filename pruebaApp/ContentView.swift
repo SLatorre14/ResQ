@@ -117,9 +117,4 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct ScaleButtonStyle : ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View
-    {
-        configuration.label.scaleEffect(configuration.isPressed ? 2 : 1)
-    }
-}
+
