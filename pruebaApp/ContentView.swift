@@ -7,13 +7,21 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct ContentView: View 
+{
+    
+    @State private var pageIndex = 0
+    private let pages: [Page] =   Page.samplePages
+    private let dotAppearance = UIPageControl.appearance()
+   
     @State var isClicked : Bool = false
     let image = Image("resQLogo")
-    var body: some View {
+    var body: some View 
+    {
         
      
-        ZStack {
+        ZStack 
+        {
             
             
             Color("LightGreen")
@@ -50,9 +58,53 @@ struct ContentView: View {
                 .buttonStyle(ScaleButtonStyle())
         }
        
+        TabView(selection: $pageIndex)
+        {
+            ForEach(pages)
+            {
+                page in
+                VStack
+                {
+                    Spacer()
+                    PageView(page: page)
+                    Spacer()
+                    if page == pages.last
+                    {
+                        Button("Next", action: goToZero).buttonStyle(.bordered)
+                    }
+                    else
+                    {
+                        Button("Next", action: incrementPage)
+                    }
+                    Spacer()
+                    
+                }
+                .tag(page.tag)
+            }
+            
+        }
+        .animation(.easeIn, value: pageIndex)
+        .tabViewStyle(.page)
+        .indexViewStyle(.page(backgroundDisplayMode: .interactive))
+        .onAppear
+        {
+            dotAppearance.currentPageIndicatorTintColor = .black
+            dotAppearance.pageIndicatorTintColor = .gray
+        }
         
         
         
+        
+    }
+    
+    func incrementPage()
+    {
+        pageIndex += 1
+    }
+    
+    func goToZero()
+    {
+        pageIndex = 0
     }
     
         
