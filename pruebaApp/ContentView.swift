@@ -7,22 +7,14 @@
 
 import SwiftUI
 
-struct ContentView: View 
+struct ContentView: View
 {
-    
-    @State private var pageIndex = 0
-    private let pages: [Page] =   Page.samplePages
-    private let dotAppearance = UIPageControl.appearance()
-   
     @State var isClicked : Bool = false
     let image = Image("resQLogo")
-    var body: some View 
+    var body: some View
     {
-        
-     
-        ZStack 
+        ZStack
         {
-            
             
             Color("LightGreen")
             RoundedRectangle(cornerRadius: 30, style: .circular)
@@ -39,81 +31,32 @@ struct ContentView: View
                 Text("Security at your fingertips")
                     .foregroundColor(.white)
                 
-              
+                
             }
             Button{
             }
-                label:{
-                    Text("Get Started")
-                        .foregroundColor(Color("LighterGreen"))
-                        .bold()
-                        .frame(width: 170, height: 50)
-                        .background{
-                            RoundedRectangle(cornerRadius: 15, style: .continuous)
-                                .fill(.white)
-                        }
+        label:{
+            Text("Get Started")
+                .foregroundColor(Color("LighterGreen"))
+                .bold()
+                .frame(width: 170, height: 50)
+                .background{
+                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                        .fill(.white)
                 }
-                .padding(.top)
-                .offset(y:120)
-                .buttonStyle(ScaleButtonStyle())
         }
-       
-        TabView(selection: $pageIndex)
-        {
-            ForEach(pages)
-            {
-                page in
-                VStack
-                {
-                    Spacer()
-                    PageView(page: page)
-                    Spacer()
-                    if page == pages.last
-                    {
-                        Button("Next", action: goToZero).buttonStyle(.bordered)
-                    }
-                    else
-                    {
-                        Button("Next", action: incrementPage)
-                    }
-                    Spacer()
-                    
-                }
-                .tag(page.tag)
-            }
-            
+        .padding(.top)
+        .offset(y:120)
+        .buttonStyle(ScaleButtonStyle())
         }
-        .animation(.easeIn, value: pageIndex)
-        .tabViewStyle(.page)
-        .indexViewStyle(.page(backgroundDisplayMode: .interactive))
-        .onAppear
-        {
-            dotAppearance.currentPageIndicatorTintColor = .black
-            dotAppearance.pageIndicatorTintColor = .gray
-        }
-        
-        
-        
-        
     }
-    
-    func incrementPage()
-    {
-        pageIndex += 1
-    }
-    
-    func goToZero()
-    {
-        pageIndex = 0
-    }
-    
-        
 }
-
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+    
+struct ContentView_Previews: PreviewProvider
+{
+    static var previews: some View
+    {
+            ContentView()
     }
 }
 

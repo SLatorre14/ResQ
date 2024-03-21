@@ -23,6 +23,7 @@
 		9B5F24242BA3970900BD3CAB /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5F24232BA3970900BD3CAB /* ChatView.swift */; };
 		CE59BD9F2BAB726C00F20208 /* PageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59BD9E2BAB726C00F20208 /* PageModel.swift */; };
 		CE59BDA12BAB756F00F20208 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59BDA02BAB756F00F20208 /* PageView.swift */; };
+		CE59BDA32BABCCF500F20208 /* SlideintoScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59BDA22BABCCF500F20208 /* SlideintoScreenView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		9B5F24232BA3970900BD3CAB /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		CE59BD9E2BAB726C00F20208 /* PageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageModel.swift; sourceTree = "<group>"; };
 		CE59BDA02BAB756F00F20208 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
+		CE59BDA22BABCCF500F20208 /* SlideintoScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideintoScreenView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				88FBB1942BAB9AE300B4E390 /* Info.plist */,
+				CE59BDA22BABCCF500F20208 /* SlideintoScreenView.swift */,
 				88FBB18E2BAB986400B4E390 /* RootView.swift */,
 				CE59BD9E2BAB726C00F20208 /* PageModel.swift */,
 				888E98062B94E0FF000907D8 /* pruebaAppApp.swift */,
@@ -199,6 +202,7 @@
 			files = (
 				88FBB18F2BAB986500B4E390 /* RootView.swift in Sources */,
 				9B5F24242BA3970900BD3CAB /* ChatView.swift in Sources */,
+				CE59BDA32BABCCF500F20208 /* SlideintoScreenView.swift in Sources */,
 				888E98092B94E0FF000907D8 /* ContentView.swift in Sources */,
 				88FBB1922BAB988C00B4E390 /* AuthenticationManager.swift in Sources */,
 				88FBB1932BAB988C00B4E390 /* SignInView.swift in Sources */,
