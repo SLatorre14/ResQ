@@ -14,10 +14,10 @@
             filePath = "pruebaApp/Authentication/SignInView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "110"
-            endingLineNumber = "110"
-            landmarkName = "SignInView"
-            landmarkType = "14">
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "initiateMicrosoftAuthentication()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

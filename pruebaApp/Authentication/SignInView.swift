@@ -21,6 +21,7 @@ final class SignInViewModel: ObservableObject{
 var provider = OAuthProvider(providerID: "microsoft.com")
 struct SignInView: View {
     @StateObject private var viewModel = SignInViewModel()
+    @Binding var showSigninView: Bool
     var body: some View {
         VStack {
             TextField("Email:", text: $viewModel.email)
@@ -46,6 +47,7 @@ struct SignInView: View {
             
             Button(action: {
                 initiateMicrosoftAuthentication()
+               
             }) {
                 Text("Sign in with Microsoft")
                     .padding()
@@ -54,20 +56,7 @@ struct SignInView: View {
                     .cornerRadius(8)
             }
             
-            NavigationLink(destination: ContentView()){
-                
-                Text("Get Started")
-                    .foregroundColor(Color("LighterGreen"))
-                    .bold()
-                    .frame(width: 200, height: 50)
-                    .background{
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .fill(.white)
-                    }
-                    .padding(.top)
-                    .offset(y:120)
-                
-            }
+           
             
             
             
@@ -102,6 +91,8 @@ struct SignInView: View {
                     }
                     // User signed in successfully
                     print("User signed in:", authResult?.user.uid ?? "No user")
+                    showSigninView = false
+                    return
             
                 }
             }
@@ -111,7 +102,8 @@ struct SignInView: View {
     
     struct SignInView_Previews: PreviewProvider {
         static var previews: some View {
-            SignInView()
+            SignInView(showSigninView: .constant(true))
+            
         }
     }
 }

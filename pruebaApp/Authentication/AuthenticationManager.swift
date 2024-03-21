@@ -34,5 +34,9 @@ final class AuthenticationManager{
         return auth
     }
     
+    func signUserOut() throws {
+        try Auth.auth().signOut()
+    }
+    
  
 }

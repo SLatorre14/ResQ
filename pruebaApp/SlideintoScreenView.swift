@@ -9,12 +9,12 @@ import SwiftUI
 
 struct SlideintoScreenView: View 
 {
-    
+    @State private var isPresentingMenuView = false
     @State private var pageIndex = 0
     private let pages: [Page] =   Page.samplePages
     private let dotAppearance = UIPageControl.appearance()
     
-    var body: some View 
+    var body: some View
     {
         TabView(selection: $pageIndex)
         {
@@ -28,11 +28,26 @@ struct SlideintoScreenView: View
                     Spacer()
                     if page == pages.last
                     {
-                        Button("Next",action: goToMenu) .buttonStyle(.bordered)
+                        Button("Go to Menu") {
+                            isPresentingMenuView.toggle()
+                               }
+                               .fullScreenCover(isPresented: $isPresentingMenuView) {
+                                   RootView()
+                               }
+                               .padding()
+                               .foregroundColor(.white)
+                               .background(Color("LightGreen"))
+                               .cornerRadius(10)
+                               .frame(width: 150, height: 50)
                     }
                     else
                     {
                         Button("Next", action: incrementPage)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(Color(.gray))
+                            .cornerRadius(10)
+                            .frame(width: 150, height: 50)
                     }
                     Spacer()
                     
@@ -57,16 +72,14 @@ struct SlideintoScreenView: View
         pageIndex += 1
     }
     
-    func goToMenu()
+    func gotoFirst()
     {
-        NavigationLink(destination: MenuView())
-        {
-            
-        }
+        pageIndex = 0
     }
     
+}
+struct SlideintoScreeView_Previews: PreviewProvider {
+    static var previews: some View {
+        SlideintoScreenView()
     }
-#Preview 
-{
-    SlideintoScreenView()
 }
