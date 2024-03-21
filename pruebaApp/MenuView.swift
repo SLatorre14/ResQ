@@ -77,21 +77,21 @@ struct MenuView: View {
                     }
                     Spacer()
                         .frame(width:330,height:40)
-                    Button{
+                    
+                    NavigationLink(destination: ChatView()) {
+                                        Text("Contact Student Brigade")
+                                    }
+                    
+                    .font(.footnote)
+                    .foregroundColor(.white)
+                    .bold()
+                    .frame(width: 210, height: 45)
+                    .background{
+                        RoundedRectangle(cornerRadius: 15, style: .continuous)
+                            .fill(Color("LighterGreen"))
                     }
-                label:{
-                    Text("Contatc Student Brigrade")
-                        .font(.footnote)
-                        .foregroundColor(.white)
-                        .bold()
-                        .frame(width: 210, height: 45)
-                        .background{
-                            RoundedRectangle(cornerRadius: 15, style: .continuous)
-                                .fill(Color("LighterGreen"))
-                        }
-                }
-                .padding(.top)
-                .buttonStyle(ScaleButtonStyle())
+                    .padding(.top)
+                   
                     
                     Button{
                     }
@@ -109,21 +109,23 @@ struct MenuView: View {
                 .padding(.top)
                 .buttonStyle(ScaleButtonStyle())
                     
-                    Button{
+                    
+                    
+                    NavigationLink(destination: MapView()) {
+                                        Text("Open Campus Map")
+                                    }
+                 
+                    .font(.footnote)
+                    .foregroundColor(.white)
+                    .bold()
+                    .frame(width: 210, height: 45)
+                    .background{
+                        RoundedRectangle(cornerRadius: 15, style: .continuous)
+                            .fill(Color("LighterGreen"))
                     }
-                label:{
-                    Text("Safety Tips on the Campus")
-                        .font(.footnote)
-                        .foregroundColor(.white)
-                        .bold()
-                        .frame(width: 210, height: 45)
-                        .background{
-                            RoundedRectangle(cornerRadius: 15, style: .continuous)
-                                .fill(Color("LighterGreen"))
-                        }
-                }
-                .padding(.top)
-                .buttonStyle(ScaleButtonStyle())
+                    .padding(.top)
+                
+                
                     
                     Spacer()
                         .frame(height: 30)

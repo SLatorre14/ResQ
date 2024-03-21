@@ -12,6 +12,7 @@
 		880DF4932BA52BBC00762F6D /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 880DF4922BA52BBC00762F6D /* FirebaseAnalyticsSwift */; };
 		880DF4962BA52E4600762F6D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 880DF4952BA52E4600762F6D /* FirebaseAuth */; };
 		880DF4992BA52EE100762F6D /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880DF4982BA52EE100762F6D /* AuthenticationView.swift */; };
+		883ED5B82BACBCA500DF9FC1 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883ED5B72BACBCA500DF9FC1 /* MapView.swift */; };
 		888E98072B94E0FF000907D8 /* pruebaAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888E98062B94E0FF000907D8 /* pruebaAppApp.swift */; };
 		888E98092B94E0FF000907D8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888E98082B94E0FF000907D8 /* ContentView.swift */; };
 		888E980B2B94E102000907D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 888E980A2B94E102000907D8 /* Assets.xcassets */; };
@@ -29,6 +30,7 @@
 /* Begin PBXFileReference section */
 		880DF48D2BA52A5400762F6D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		880DF4982BA52EE100762F6D /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
+		883ED5B72BACBCA500DF9FC1 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		888E98032B94E0FF000907D8 /* pruebaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pruebaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		888E98062B94E0FF000907D8 /* pruebaAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pruebaAppApp.swift; sourceTree = "<group>"; };
 		888E98082B94E0FF000907D8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				880DF48D2BA52A5400762F6D /* GoogleService-Info.plist */,
 				888E980A2B94E102000907D8 /* Assets.xcassets */,
 				888E980C2B94E102000907D8 /* Preview Content */,
+				883ED5B72BACBCA500DF9FC1 /* MapView.swift */,
 			);
 			path = pruebaApp;
 			sourceTree = "<group>";
@@ -201,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				88FBB18F2BAB986500B4E390 /* RootView.swift in Sources */,
+				883ED5B82BACBCA500DF9FC1 /* MapView.swift in Sources */,
 				9B5F24242BA3970900BD3CAB /* ChatView.swift in Sources */,
 				CE59BDA32BABCCF500F20208 /* SlideintoScreenView.swift in Sources */,
 				888E98092B94E0FF000907D8 /* ContentView.swift in Sources */,
@@ -344,6 +348,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pruebaApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ResQ;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "ResQ needs your location to show in the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -376,6 +381,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pruebaApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ResQ;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "ResQ needs your location to show in the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
