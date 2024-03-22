@@ -19,9 +19,9 @@ struct Page: Identifiable, Equatable
     // These are the different pages that are displayed after the get started button.
     static var samplePages:[Page] =
     [
-        Page(name:"Ejemplo1",  imageUrl: "PlaceHolder", tag: 0),
-        Page(name:"Ejemplo2",  imageUrl: "PlaceHolder", tag: 1),
-        Page(name:"Ejemplo3",  imageUrl: "PlaceHolder", tag: 2)
+        Page(name:"Connect with your university's student brigade",  imageUrl: "screen1n", tag: 0),
+        Page(name:"Recieve evacuation alerts",  imageUrl: "screen2n", tag: 1),
+        Page(name:"Report a student",  imageUrl: "screen3n", tag: 2)
     ]
     
     

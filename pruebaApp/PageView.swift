@@ -21,7 +21,7 @@ struct PageView: View
                 .cornerRadius(30)
                 .padding()
             Text(page.name)
-                .font(.title)
+                .font(.system(size: 16))
         }
     }
 }
