@@ -53,6 +53,8 @@ struct SlideintoScreenView: View
                     
                 }
                 .tag(page.tag)
+                
+                
             }
             
         }

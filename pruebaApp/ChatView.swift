@@ -12,6 +12,7 @@ struct ChatView: View {
                 Text("Brigade")
                     .font(.largeTitle)
                     .bold()
+                    .foregroundColor(.black)
                 
                 Image(systemName: "bubble.left.fill")
                     .font(.system(size: 26))

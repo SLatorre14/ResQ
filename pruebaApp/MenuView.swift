@@ -31,6 +31,7 @@ struct MenuView: View {
                             .frame(width:290,height:40)
                         Text("Universidad de Los Andes Homepage")
                             .font(.caption)
+                            .foregroundColor(.black)
                     }
                     Spacer()
                         .frame(width:330,height:50)
@@ -70,9 +71,11 @@ struct MenuView: View {
                         Text("Discover the latest news about security at")
                             .font(.footnote)
                             .offset(x: 0 ,y:47.0)
+                            .foregroundColor(.black)
                         Text("Universidad de los andes")
                             .font(.footnote)
                             .offset(x: 0 ,y:65.0)
+                            .foregroundColor(.black)
                         
                     }
                     Spacer()
@@ -135,6 +138,7 @@ struct MenuView: View {
                             label: {
                                 Text("Activate alerts")
                                     .font(.footnote)
+                                    .foregroundColor(.black)
                             }
                         )
                         .toggleStyle(SwitchToggleStyle(tint: Color("LighterGreen")))
