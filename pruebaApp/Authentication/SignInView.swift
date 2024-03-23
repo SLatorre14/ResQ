@@ -8,18 +8,45 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
+import FirebaseStorage
+import FirebaseFirestore
+
+
+class FirebaseManager: NSObject {
+    let auth: Auth
+    let storage: Storage
+    let firestore: Firestore
+    
+    static let shared = FirebaseManager()
+    
+    override init() {
+
+        self.auth = Auth.auth()
+        self.storage = Storage.storage()
+        self.firestore = Firestore.firestore()
+        
+        
+        super.init()
+    }
+}
+    
+  
+    
+    
+
 
 final class SignInViewModel: ObservableObject{
    
     @Published var email = ""
     @Published var password = ""
-
     
 }
 
 
 var provider = OAuthProvider(providerID: "microsoft.com")
 struct SignInView: View {
+    
+    
     @StateObject private var viewModel = SignInViewModel()
     @Binding var showSigninView: Bool
     var body: some View {
@@ -83,7 +110,8 @@ struct SignInView: View {
             }
             if let credential = credential {
                 // Sign in with credential
-                Auth.auth().signIn(with: credential) { authResult, error in
+                
+                FirebaseManager.shared.auth.signIn(with: credential) { authResult, error in
                     if let error = error {
                         // Handle sign-in error
                         print("Sign-in Error:", error.localizedDescription)
@@ -92,11 +120,31 @@ struct SignInView: View {
                     // User signed in successfully
                     print("User signed in:", authResult?.user.uid ?? "No user")
                     showSigninView = false
+                    storeUserInformation()
+            
                     return
             
                 }
             }
         }
+    }
+    
+    private func storeUserInformation(){
+        let userEmail = FirebaseManager.shared.auth.currentUser?.email
+        guard let userId = FirebaseManager.shared.auth.currentUser?.uid else {
+            return}
+        let userData =  ["email":  userEmail, "uid": userId ]
+        FirebaseManager.shared.firestore.collection("users").document(userId).setData(userData) {
+            err in
+            if let err = err{
+                print(err)
+                return
+            }
+            print("Success")
+            
+        }
+        
+     
     }
     
     

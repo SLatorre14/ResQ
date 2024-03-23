@@ -8,13 +8,18 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
+import FirebaseFirestore
+import FirebaseStorage
 
 @main
 struct pruebaAppApp: App {
-    init(){
-        FirebaseApp.configure()
-        print("Configured Firebase")
-    }
+    init() {
+       
+            FirebaseApp.configure()
+            print("Firebase configured")
+           
+        }
+    
     
     var body: some Scene {
         WindowGroup {
@@ -22,5 +27,7 @@ struct pruebaAppApp: App {
         }
     }
 }
+
+
 
 

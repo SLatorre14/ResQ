@@ -81,7 +81,7 @@ struct MenuView: View {
                     Spacer()
                         .frame(width:330,height:40)
                     
-                    NavigationLink(destination: ChatView()) {
+                    NavigationLink(destination: MainChatView()) {
                                         Text("Contact Student Brigade")
                                     }
                     
