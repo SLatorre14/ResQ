@@ -7,7 +7,7 @@
 
 import SwiftUI
 import MapKit
-
+import CoreLocation
 
 
 struct MapAnnotationItem: Identifiable {
@@ -20,17 +20,13 @@ struct MapAnnotationItem: Identifiable {
 
 struct MapView: View {
     @StateObject private var viewModel = MapViewModel()
+
     
     
-    let annotations = [
-        MapAnnotationItem(coordinate: CLLocationCoordinate2D(latitude: 4.6018, longitude: -74.0661), title: "ML"),
-        MapAnnotationItem(coordinate: CLLocationCoordinate2D(latitude: 4.604400872503055, longitude: -74.0659650900807), title: "SD")
-        
-    ]
     
     
     var body: some View {
-        Map(coordinateRegion: $viewModel.region, showsUserLocation: true, annotationItems: annotations) { annotation in
+        Map(coordinateRegion: $viewModel.region, showsUserLocation: true, annotationItems: viewModel.annotations) { annotation in
             MapPin(coordinate: annotation.coordinate, tint: .blue)
             
         }
@@ -51,10 +47,19 @@ struct MapView_Previews: PreviewProvider {
 
 final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate{
     
+    let maxDistance: CLLocationDistance = 100
+    
     @Published var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 4.6018, longitude: -74.0661),
         span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
     )
+    
+    @Published var annotations = [
+        MapAnnotationItem(coordinate: CLLocationCoordinate2D(latitude: 4.6018, longitude: -74.0661), title: "ML"),
+        MapAnnotationItem(coordinate: CLLocationCoordinate2D(latitude: 4.604400872503055, longitude: -74.0659650900807), title: "SD")
+        
+    ]
+    
     var locationManager: CLLocationManager?
     
     func checkIfLocationServicesIsEnabled(){
@@ -80,7 +85,21 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate{
         case .denied:
             print("Location Permission Denied")
         case .authorizedAlways, .authorizedWhenInUse:
-            region = MKCoordinateRegion(center: locationManager.location!.coordinate, span:MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
+            
+            if let userLocation = locationManager.location?.coordinate{
+                annotations = annotations.filter { annotation in
+                    let annotationLocation = CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)
+                    let userLocation = CLLocation(latitude: userLocation.latitude, longitude: userLocation.longitude)
+                    let distance = annotationLocation.distance(from: userLocation)
+                    print(distance)
+                    return distance <= maxDistance
+                }
+                
+                region = MKCoordinateRegion(center: userLocation, span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001))
+            }
+            
+            
+            
         @unknown default:
             break
         }

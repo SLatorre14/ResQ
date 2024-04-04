@@ -6,10 +6,34 @@
 //
 
 import SwiftUI
+import Firebase
+import FirebaseFirestore
 
-struct ChatUser{
-    let uid, email: String
+struct RecentMessage: Identifiable {
+    var id: String { documentId }
     
+    let documentId: String
+    let text, fromId, toId, email: String
+    let timeStamp: Timestamp
+    
+    init(documentId: String, data: [String : Any]){
+        self.documentId = documentId
+        self.text = data["text"] as? String ?? ""
+        self.fromId = data["fromId"] as? String ?? ""
+        self.toId = data["toId"] as? String ?? ""
+        self.email = data["email"] as? String ?? ""
+        self.timeStamp = data["timeStamp"] as? Timestamp ?? Timestamp(date: Date())
+       
+    }
+}
+
+struct ChatUser: Identifiable {
+    var id: String {uid}
+    let uid, email: String
+    init(email: String, uid: String){
+        self.email = email
+        self.uid = uid
+    }
     
 }
 
@@ -22,6 +46,45 @@ class MainChatViewModel: ObservableObject{
        
         
         fetchCurrentUser()
+        
+        fetchRecentMessages()
+    }
+    
+    @Published var recentMessages = [RecentMessage]()
+    
+     var firestoreListener: ListenerRegistration?
+    
+    
+    
+     func fetchRecentMessages(){
+         
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid
+        else { return }
+        
+         
+         firestoreListener?.remove()
+         self.recentMessages.removeAll()
+         
+         
+        firestoreListener = FirebaseManager.shared.firestore.collection("recent_messages").document(uid).collection("messages").order(by: "timeStamp").addSnapshotListener { querySnapshot, error in
+            if let error = error{
+                print(error)
+                return
+            }
+            
+            querySnapshot?.documentChanges.forEach({ change in
+     
+                let docId = change.document.documentID
+            
+                if let index = self.recentMessages.firstIndex(where: { rm in return rm.documentId == docId
+                }) {
+                    self.recentMessages.remove(at: index)
+                }
+                    
+                self.recentMessages.insert(.init(documentId: docId, data: change.document.data()), at: 0)
+    
+            })
+        }
     }
     
     func fetchCurrentUser() {
@@ -40,7 +103,7 @@ class MainChatViewModel: ObservableObject{
             print(data)
             let userId = data["uid"] as? String ?? ""
             let email = data["email"] as? String ?? ""
-            self.chatUser = ChatUser(uid: userId, email: email)
+            self.chatUser = ChatUser(email: email, uid: userId)
             
         }
         
@@ -49,7 +112,10 @@ class MainChatViewModel: ObservableObject{
 }
 
 struct MainChatView: View {
+    @State var navigateToChat = false
     @ObservedObject  var vm = MainChatViewModel()
+    
+    private var chatViewModel = ChatViewModel(chatUser: nil)
     
     var body: some View {
         NavigationView{
@@ -85,23 +151,33 @@ struct MainChatView: View {
                 .padding()
                 
                 ScrollView{
-                    ForEach(0..<10, id: \.self) { num in
-                        HStack(spacing: 16){
-                            Image(systemName: "person.fill")
-                                .foregroundColor(Color(.black))
-                                .font(.system(size: 32))
-                            VStack(alignment: .leading) {
-                                Text("Username")
+                    ForEach(vm.recentMessages) { recentMessage in
+                        
+                        Button{
+                            let uid = FirebaseManager.shared.auth.currentUser?.uid == recentMessage.fromId ? recentMessage.toId : recentMessage.fromId
+                            self.chatUser = ChatUser.init(email: recentMessage.email, uid: uid)
+                            self.chatViewModel.chatUser = self.chatUser
+                            self.chatViewModel.fetchMessages()
+                            self.navigateToChat.toggle()
+                        } label: {
+                            HStack(spacing: 16){
+                                Image(systemName: "person.fill")
                                     .foregroundColor(Color(.black))
-                                Text("Message sent to user")
-                                    .foregroundColor(Color(.lightGray))
+                                    .font(.system(size: 32))
+                                VStack(alignment: .leading) {
+                                    Text(recentMessage.email)
+                                        .foregroundColor(Color(.black))
+                                    Text(recentMessage.text)
+                                        .foregroundColor(Color(.lightGray))
+                                        .multilineTextAlignment(.leading)
+                                    
+                                }
+                                Spacer()
+                                
+                                Text("Hola")
                                 
                             }
-                            Spacer()
                             
-                            Text("22d")
-                                .foregroundColor(Color(.black))
-                                .font(.system(size: 14, weight: .semibold))
                         }
                         Divider()
                             .padding(.vertical, 8)
@@ -110,38 +186,60 @@ struct MainChatView: View {
                     
                 }
                 
+                NavigationLink("", isActive: $navigateToChat){
+              
+                    ChatView(vm: chatViewModel)
+                }
+                
                
             
             
             }
-            .overlay(
-                Button {
-                    
-                } label: {
-                    HStack{
-                        Spacer()
-                        Text("+ New message")
-                        Spacer()
-                    }
-                    .foregroundColor(.white)
-                    .padding(.vertical)
-                    
-                    .background(Color("LightGreen"))
-                    .cornerRadius(32)
-                    .padding(.horizontal)
-                    .shadow(radius: 15)
-                    
-                
-                
-                }, alignment: .bottom)
+            .overlay(newMessageButton, alignment: .bottom)
             .toolbar(.hidden)
             
             
         }.onAppear{
             vm.fetchCurrentUser()
+            vm.fetchRecentMessages()
         }
         
     }
+    @State var showCreateMessage = false
+    
+    private var newMessageButton: some View{
+        
+        Button {
+            showCreateMessage.toggle()
+        } label: {
+            HStack{
+                Spacer()
+                Text("+ New message")
+                Spacer()
+            }
+            .foregroundColor(.white)
+            .padding(.vertical)
+            
+            .background(Color("LightGreen"))
+            .cornerRadius(32)
+            .padding(.horizontal)
+            .shadow(radius: 15)
+            
+        
+        
+        }
+        .fullScreenCover(isPresented: $showCreateMessage){
+            NewMessageView(didSelectUser: { user in
+                print(user.email)
+                self.navigateToChat.toggle()
+                self.chatUser = user
+                self.chatViewModel.chatUser = user
+                self.chatViewModel.fetchMessages()
+            })
+        }
+    }
+    
+    @State var chatUser: ChatUser?
 }
 
 struct MainChatView_Previews: PreviewProvider {
