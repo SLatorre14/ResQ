@@ -174,7 +174,7 @@ struct MainChatView: View {
                                 }
                                 Spacer()
                                 
-                                Text("Hola")
+                                
                                 
                             }
                             

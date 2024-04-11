@@ -22,14 +22,14 @@ struct ChatMessage: Identifiable{
 
 class ChatViewModel: ObservableObject{
     @Published var messageText = ""
-    
+    @Published var selectedImage: UIImage?
     @Published var chatMessages = [ChatMessage]()
     
     var chatUser: ChatUser?
     
-    init(chatUser: ChatUser?){
+    init(chatUser: ChatUser?, selectedImage: UIImage? = nil){
         self.chatUser = chatUser
-        
+        self.selectedImage = selectedImage
         fetchMessages()
     }
     
@@ -69,34 +69,75 @@ class ChatViewModel: ObservableObject{
         guard let fromId = FirebaseManager.shared.auth.currentUser?.uid
         else { return }
         guard let toId = chatUser?.uid else { return }
-        let document = FirebaseManager.shared.firestore.collection("messages").document(fromId).collection(toId).document()
-        let messageData = ["fromId": fromId, "toId": toId, "text": self.messageText, "timeStamp": Timestamp()] as [String : Any]
-        document.setData(messageData){ error in
-            if let error = error {
-                print(error)
-                return
-            }
-            
-            print("Succesfully sent message")
-            
-            self.persistRecentMessage()
-            self.messageText = ""
-            self.count += 1
-            
-            
-        }
-        let recipientMessageDocument = FirebaseManager.shared.firestore.collection("messages").document(toId).collection(fromId).document()
         
-        recipientMessageDocument.setData(messageData){ error in
-            if let error = error {
-                print(error)
-                return
+        if let image = selectedImage{
+            FirebaseManager.shared.uploadImage(image: image) { result in
+                switch result {
+                case .success(let imageURL):
+                    // Once image is uploaded, send message with image URL
+                    let messageData = [
+                        "fromId": fromId,
+                        "toId": toId,
+                        "imageURL": imageURL,
+                        "timeStamp": Timestamp()
+                    ] as [String: Any]
+                    
+                    let document = FirebaseManager.shared.firestore.collection("messages").document(fromId).collection(toId).document()
+                    document.setData(messageData) { error in
+                        if let error = error {
+                            print(error)
+                            return
+                        }
+                        print("Succesfully sent image message")
+                        self.persistRecentMessage()
+                        self.selectedImage = nil // Reset selected image
+                    }
+                    
+                    print("Image uploaded successfully: \(imageURL)")
+                case .failure(let error):
+                    // Handle failure
+                    print("Failed to upload image: \(error)")
+                }
+                
             }
             
-            print("Received Message")
             
+            
+            
+        } else {
+            
+            let document = FirebaseManager.shared.firestore.collection("messages").document(fromId).collection(toId).document()
+            let messageData = ["fromId": fromId, "toId": toId, "text": self.messageText, "timeStamp": Timestamp()] as [String : Any]
+            document.setData(messageData){ error in
+                if let error = error {
+                    print(error)
+                    return
+                }
+                
+                print("Succesfully sent message")
+                
+                self.persistRecentMessage()
+                self.messageText = ""
+                self.count += 1
+                
+                
+            }
+            
+            let recipientMessageDocument = FirebaseManager.shared.firestore.collection("messages").document(toId).collection(fromId).document()
+            
+            recipientMessageDocument.setData(messageData){ error in
+                if let error = error {
+                    print(error)
+                    return
+                }
+                
+                print("Received Message")
+                
+            }
         }
     }
+        
+        
     
     private func persistRecentMessage(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid
@@ -148,8 +189,10 @@ class ChatViewModel: ObservableObject{
 }
 
 struct ChatView: View {
+    @State var selectedImage: UIImage?
+    @State var image: UIImage?
     @State var messages: [String] = []
-
+    @State var showImagePicker = false
     @ObservedObject var vm: ChatViewModel
    
     
@@ -232,9 +275,15 @@ struct ChatView: View {
             }
             .safeAreaInset(edge: .bottom){
                 HStack {
+                    Button{
+                        showImagePicker.toggle()
+                    }
+                label: {
                     Image(systemName: "photo.on.rectangle")
                         .font(.system(size: 30))
                         .foregroundColor(Color("LighterGreen"))
+                }
+                    
                         
                     TextField("Type something", text: $vm.messageText)
                         .padding()
@@ -265,13 +314,23 @@ struct ChatView: View {
             
            
            
-        }.navigationTitle("Brigadier")
+        }
+        .fullScreenCover(isPresented: $showImagePicker, onDismiss: nil){
+            ImagePicker(image: $image)}
+        .onChange(of: selectedImage){
+            newImage in
+            vm.selectedImage = newImage
+            vm.sendMessage()
+        }
+        
+        .navigationTitle("Brigadier")
             .navigationBarItems(trailing: Button(action: {
                 vm.count += 1
             }, label: {
                 
             }))
             .onDisappear{ vm.firestoreListener?.remove()}
+            
             
     }
     

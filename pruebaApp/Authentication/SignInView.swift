@@ -19,6 +19,37 @@ class FirebaseManager: NSObject {
     
     static let shared = FirebaseManager()
     
+    func uploadImage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
+            guard let imageData = image.jpegData(compressionQuality: 0.5) else {
+                completion(.failure(NSError(domain: "com.yourapp.error", code: 400, userInfo: [NSLocalizedDescriptionKey: "Failed to convert image to data"])))
+                return
+            }
+            
+            let fileName = UUID().uuidString + ".jpg"
+            let storageRef = storage.reference().child("images").child(fileName)
+            
+            storageRef.putData(imageData, metadata: nil) { metadata, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                storageRef.downloadURL { url, error in
+                    if let error = error {
+                        completion(.failure(error))
+                        return
+                    }
+                    
+                    guard let downloadURL = url else {
+                        completion(.failure(NSError(domain: "com.yourapp.error", code: 400, userInfo: [NSLocalizedDescriptionKey: "Failed to retrieve download URL"])))
+                        return
+                    }
+                    
+                    completion(.success(downloadURL))
+                }
+            }
+        }
+    
     override init() {
 
         self.auth = Auth.auth()
@@ -39,6 +70,33 @@ final class SignInViewModel: ObservableObject{
    
     @Published var email = ""
     @Published var password = ""
+    @State var loginStatusMessage = ""
+    
+    func loginUser(completion: @escaping (Bool) -> Void) {
+        FirebaseManager.shared.auth.signIn(withEmail: email, password: password) {
+            result, error in
+                if let error = error{
+                    self.loginStatusMessage = ("failed to login user: \(error)")
+                    completion(false)
+                    return
+                }
+                print("Success logging in user: \(result?.user.uid ?? "")")
+                completion(true)
+                
+        }
+    }
+    
+    func createNewAccount(completion: @escaping (Bool) -> Void) {
+        FirebaseManager.shared.auth.createUser(withEmail: email, password: password){ result, error in
+            if let error = error{
+                self.loginStatusMessage = ("failed to create user: \(error)")
+                completion(false)
+                return
+            }
+            print("Success creating in user: \(result?.user.uid ?? "")")
+            completion(true)
+        }
+    }
     
 }
 
@@ -46,54 +104,120 @@ final class SignInViewModel: ObservableObject{
 var provider = OAuthProvider(providerID: "microsoft.com")
 struct SignInView: View {
     
-    
+    @State var showImagePicker = false
+    @State var loginStatusMessage = ""
+    @State var isLoginMode = false
     @StateObject private var viewModel = SignInViewModel()
     @Binding var showSigninView: Bool
     var body: some View {
-        VStack {
-            TextField("Email:", text: $viewModel.email)
+        NavigationView{
+            ScrollView{
+                
+                VStack{
+                    Picker(selection: $isLoginMode, label: Text("Pickier here")){
+                        Text("Login")
+                            .tag(true)
+                        Text("Create Account")
+                            .tag(false)
+                        
+                    }.pickerStyle(SegmentedPickerStyle())
+                        .padding()
+                    
+                   
+                    Button{
+                        showImagePicker.toggle()
+                    } label: {
+                        Image(systemName: "person.fill")
+                            .font(.system(size:60))
+                            .padding()
+                    }
+                    
+                    
+                    TextField("Email", text: $viewModel.email)
+                        .padding()
+                        .background(Color.gray.opacity(0.4))
+                        .keyboardType(.emailAddress)
+                        .autocapitalization(.none)
+                        .cornerRadius(10)
+                    
+                    SecureField("Password", text: $viewModel.password)
+                        .padding()
+                        .background(Color.gray.opacity(0.4))
+                        .cornerRadius(10)
+                            
+                    Button{
+                        handleAction()
+                    } label: {
+                        HStack{
+                          
+                            Text(isLoginMode ?  "Log In" : "Create Account")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(height: 55)
+                                .frame(width: 250)
+                                .background(Color("LightGreen"))
+                                .cornerRadius(10)
+                        }
+                    }
+                    
+                    if isLoginMode{
+                        Button(action: {
+                            initiateMicrosoftAuthentication()
+                           
+                        }) {
+                            
+                            Text("Sign in with Microsoft")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(height: 55)
+                                .frame(width: 250)
+                                .background(Color("LightGreen"))
+                                .cornerRadius(10)
+                        }
+                    }
+                    
+                    Text(viewModel.loginStatusMessage)
+                        .foregroundColor(.red)
+                }
                 .padding()
-                .background(Color.gray.opacity(0.4))
-                .cornerRadius(10)
+                
+                
+                
+            }.navigationTitle(isLoginMode ? "Log In": "Create Account")
             
-            SecureField("Password:", text: $viewModel.password)
-                .padding()
-                .background(Color.gray.opacity(0.4))
-                .cornerRadius(10)
-            
-            Button{
-            } label: {
-                Text("Sign in")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(height: 55)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-            }
-            
-            Button(action: {
-                initiateMicrosoftAuthentication()
-               
-            }) {
-                Text("Sign in with Microsoft")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(Color.white)
-                    .cornerRadius(8)
-            }
-            
-           
-            
-            
-            
-            
-            .padding()
-            .navigationTitle("Sign In with Email")
+        }.fullScreenCover(isPresented: $showImagePicker, onDismiss: nil){
+            ImagePicker(image: $image)
         }
+        
+       
         
         
     }
+    @State var image: UIImage?
+    
+    private func handleAction() {
+        if isLoginMode {
+            viewModel.loginUser(){ success in
+                if success {
+                    showSigninView = false
+                    storeUserInformation()
+                }
+                
+            }
+           
+            
+        } else {
+            viewModel.createNewAccount(){ success in
+                if success{
+                    showSigninView = false
+                    storeUserInformation()
+                }
+            }
+           
+        }
+    }
+    
+    
     
     private func initiateMicrosoftAuthentication() {
         
