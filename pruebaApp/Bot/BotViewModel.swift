@@ -9,7 +9,7 @@ import SwiftUI
 import ChatGPTSwift
 @MainActor
 class BotViewModel: ObservableObject{
-    let api = ChatGPTAPI(apiKey: "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")
+    let api = ChatGPTAPI(apiKey: "")
     @Published var message = ""
     @Published var chatMessages = [ChatMessageBot]()
     @Published var isWaitingForResponse = false
