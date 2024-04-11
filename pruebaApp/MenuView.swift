@@ -81,25 +81,11 @@ struct MenuView: View {
                     Spacer()
                         .frame(width:330,height:40)
                     
-                    NavigationLink(destination: MainChatView()) {
-                                        Text("Contact Student Brigade")
-                                    }
-                    
-                    .font(.footnote)
-                    .foregroundColor(.white)
-                    .bold()
-                    .frame(width: 210, height: 45)
-                    .background{
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .fill(Color("LighterGreen"))
-                    }
-                    .padding(.top)
-                   
-                    
-                    Button{
-                    }
-                label:{
-                    Text("Report MAAD Case")
+                    Group{
+                        NavigationLink(destination: MainChatView()) {
+                                            Text("Contact Student Brigade")
+                                        }
+                        
                         .font(.footnote)
                         .foregroundColor(.white)
                         .bold()
@@ -108,25 +94,60 @@ struct MenuView: View {
                             RoundedRectangle(cornerRadius: 15, style: .continuous)
                                 .fill(Color("LighterGreen"))
                         }
-                }
-                .padding(.top)
-                .buttonStyle(ScaleButtonStyle())
-                    
-                    
-                    
-                    NavigationLink(destination: MapView()) {
-                                        Text("Open Campus Map")
-                                    }
-                 
-                    .font(.footnote)
-                    .foregroundColor(.white)
-                    .bold()
-                    .frame(width: 210, height: 45)
-                    .background{
-                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                            .fill(Color("LighterGreen"))
+                        .padding(.top)
+                       
+                        
+                        
+                        Button{
+                        }
+                    label:{
+                        Text("Report MAAD Case")
+                            .font(.footnote)
+                            .foregroundColor(.white)
+                            .bold()
+                            .frame(width: 210, height: 45)
+                            .background{
+                                RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                    .fill(Color("LighterGreen"))
+                            }
                     }
                     .padding(.top)
+                    .buttonStyle(ScaleButtonStyle())
+                        
+                        
+                        
+                        NavigationLink(destination: MapView()) {
+                                            Text("Open Campus Map")
+                                        }
+                     
+                        .font(.footnote)
+                        .foregroundColor(.white)
+                        .bold()
+                        .frame(width: 210, height: 45)
+                        .background{
+                            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                .fill(Color("LighterGreen"))
+                        }
+                        .padding(.top)
+                        
+                        NavigationLink(destination: BotView()) {
+                                            Text("Chat with Brandnew Bot")
+                                        }
+                     
+                        .font(.footnote)
+                        .foregroundColor(.white)
+                        .bold()
+                        .frame(width: 210, height: 45)
+                        .background{
+                            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                .fill(Color("LighterGreen"))
+                        }
+                        .padding(.top)
+                    }
+                    
+                    
+                    
+                    
                 
                 
                     

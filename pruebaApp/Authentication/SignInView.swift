@@ -72,29 +72,34 @@ final class SignInViewModel: ObservableObject{
     @Published var password = ""
     @State var loginStatusMessage = ""
     
-    func loginUser(completion: @escaping (Bool) -> Void) {
+    func loginUser(completion: @escaping (Bool, String?) -> Void) {
         FirebaseManager.shared.auth.signIn(withEmail: email, password: password) {
             result, error in
                 if let error = error{
-                    self.loginStatusMessage = ("failed to login user: \(error)")
-                    completion(false)
-                    return
+                    let errorMessage = "Failed to log user: \(error)"
+                    self.loginStatusMessage = errorMessage
+                    print(errorMessage)
+                    completion(false, errorMessage)
+                    
                 }
                 print("Success logging in user: \(result?.user.uid ?? "")")
-                completion(true)
+                completion(true, nil)
                 
         }
     }
     
-    func createNewAccount(completion: @escaping (Bool) -> Void) {
+    func createNewAccount(completion: @escaping (Bool, String?) -> Void) {
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password){ result, error in
             if let error = error{
-                self.loginStatusMessage = ("failed to create user: \(error)")
-                completion(false)
-                return
+                let errorMessage = "Failed to log user: \(error)"
+                self.loginStatusMessage = errorMessage
+                print(errorMessage)
+                completion(false, errorMessage)
+
+                
             }
             print("Success creating in user: \(result?.user.uid ?? "")")
-            completion(true)
+            completion(true, nil)
         }
     }
     
@@ -104,6 +109,8 @@ final class SignInViewModel: ObservableObject{
 var provider = OAuthProvider(providerID: "microsoft.com")
 struct SignInView: View {
     
+    @State var showAlert = false
+    @State var errorMessage = ""
     @State var showImagePicker = false
     @State var loginStatusMessage = ""
     @State var isLoginMode = false
@@ -127,9 +134,21 @@ struct SignInView: View {
                     Button{
                         showImagePicker.toggle()
                     } label: {
-                        Image(systemName: "person.fill")
-                            .font(.system(size:60))
-                            .padding()
+                        
+                        VStack{
+                            if let image = self.image{
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 128, height: 128)
+                                    .cornerRadius(64)
+                            } else {
+                                Image(systemName: "person.fill")
+                                    .font(.system(size:60))
+                                    .padding()
+                            }
+                        }
+                        
                     }
                     
                     
@@ -176,18 +195,21 @@ struct SignInView: View {
                         }
                     }
                     
-                    Text(viewModel.loginStatusMessage)
-                        .foregroundColor(.red)
+                    
                 }
                 .padding()
                 
-                
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                }
                 
             }.navigationTitle(isLoginMode ? "Log In": "Create Account")
             
         }.fullScreenCover(isPresented: $showImagePicker, onDismiss: nil){
             ImagePicker(image: $image)
         }
+        
         
        
         
@@ -197,24 +219,24 @@ struct SignInView: View {
     
     private func handleAction() {
         if isLoginMode {
-            viewModel.loginUser(){ success in
-                if success {
-                    showSigninView = false
-                    storeUserInformation()
+                viewModel.loginUser() { success, message in
+                    if success {
+                        showSigninView = false
+                        storeUserInformation()
+                    } else {
+                        errorMessage = message ?? ""
+                    }
                 }
-                
-            }
-           
-            
-        } else {
-            viewModel.createNewAccount(){ success in
-                if success{
-                    showSigninView = false
-                    storeUserInformation()
+            } else {
+                viewModel.createNewAccount() { success, message in
+                    if success {
+                        showSigninView = false
+                        storeUserInformation()
+                    } else {
+                        errorMessage = message ?? ""
+                    }
                 }
             }
-           
-        }
     }
     
     

@@ -25,6 +25,10 @@ class ChatViewModel: ObservableObject{
     @Published var selectedImage: UIImage?
     @Published var chatMessages = [ChatMessage]()
     
+    var isMessageTextEmpty: Bool{
+        return messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
     var chatUser: ChatUser?
     
     init(chatUser: ChatUser?, selectedImage: UIImage? = nil){
@@ -305,6 +309,8 @@ struct ChatView: View {
                     }
                     .font(.system(size: 26))
                     .padding(.horizontal, 10)
+                    .disabled(vm.isMessageTextEmpty)
+                    .opacity(vm.isMessageTextEmpty ? 0.5 : 1.0)
                 }
                 .padding()
                 .background(Color.white)

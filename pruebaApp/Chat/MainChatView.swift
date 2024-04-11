@@ -150,6 +150,8 @@ struct MainChatView: View {
               
                 .padding()
                 
+               
+                
                 ScrollView{
                     ForEach(vm.recentMessages) { recentMessage in
                         
