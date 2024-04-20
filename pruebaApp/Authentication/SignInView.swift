@@ -80,6 +80,7 @@ final class SignInViewModel: ObservableObject{
                     self.loginStatusMessage = errorMessage
                     print(errorMessage)
                     completion(false, errorMessage)
+                    return
                     
                 }
                 print("Success logging in user: \(result?.user.uid ?? "")")
@@ -95,9 +96,10 @@ final class SignInViewModel: ObservableObject{
                 self.loginStatusMessage = errorMessage
                 print(errorMessage)
                 completion(false, errorMessage)
-
+                return
                 
             }
+            
             print("Success creating in user: \(result?.user.uid ?? "")")
             completion(true, nil)
         }
@@ -106,8 +108,33 @@ final class SignInViewModel: ObservableObject{
 }
 
 
+
+
 var provider = OAuthProvider(providerID: "microsoft.com")
 struct SignInView: View {
+    
+    var isPasswordValid: Bool {
+            let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"
+            let passwordPredicate = NSPredicate(format: "SELF MATCHES %@", passwordRegex)
+            return passwordPredicate.evaluate(with: viewModel.password)
+        }
+    
+    var isPasswordLengthValid: Bool {
+            return viewModel.password.count >= 6
+        }
+        
+        var isUppercasePresent: Bool {
+            return viewModel.password.rangeOfCharacter(from: .uppercaseLetters) != nil
+        }
+        
+        var isLowercasePresent: Bool {
+            return viewModel.password.rangeOfCharacter(from: .lowercaseLetters) != nil
+        }
+        
+        var isNumberPresent: Bool {
+            return viewModel.password.rangeOfCharacter(from: .decimalDigits) != nil
+        }
+        
     
     @State var showAlert = false
     @State var errorMessage = ""
@@ -177,6 +204,8 @@ struct SignInView: View {
                                 .background(Color("LightGreen"))
                                 .cornerRadius(10)
                         }
+                        .disabled(!isPasswordValid)
+                        .opacity(!isPasswordValid ? 0.5 : 1.0)
                     }
                     
                     if isLoginMode{
@@ -199,7 +228,42 @@ struct SignInView: View {
                 }
                 .padding()
                 
+                if !isLoginMode{
+                    VStack {
+                        
+                        Text("Password must contain:")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        
+                        Image(systemName: isPasswordLengthValid ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundColor(isPasswordLengthValid ? .green : .red)
+                        Text("At least 6 characters")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Image(systemName: isUppercasePresent ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundColor(isUppercasePresent ? .green : .red)
+                        Text("An uppercase letter")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Image(systemName: isLowercasePresent ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundColor(isLowercasePresent ? .green : .red)
+                        Text("A lowercase letter")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Image(systemName: isNumberPresent ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundColor(isNumberPresent ? .green : .red)
+                        Text("A number")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                       
+                        
+                        
+                    }
+                }
+                
+                
                 if let errorMessage = errorMessage {
+                   
                     Text(errorMessage)
                         .foregroundColor(.red)
                 }
@@ -222,9 +286,12 @@ struct SignInView: View {
                 viewModel.loginUser() { success, message in
                     if success {
                         showSigninView = false
+                        print("Aqui  NOOO")
                         storeUserInformation()
                     } else {
+                        print("Aqui")
                         errorMessage = message ?? ""
+                        showSigninView = true
                     }
                 }
             } else {
@@ -234,6 +301,7 @@ struct SignInView: View {
                         storeUserInformation()
                     } else {
                         errorMessage = message ?? ""
+                        showSigninView = true
                     }
                 }
             }
