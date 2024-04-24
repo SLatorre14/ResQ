@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "chatgptswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alfianlosari/ChatGPTSwift.git",
+      "state" : {
+        "revision" : "19614cbf9d2376a680e2236533e156687a29da97",
+        "version" : "1.7.0"
+      }
+    },
+    {
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk.git",
@@ -52,6 +61,15 @@
       "state" : {
         "revision" : "26c898aed8bed13b8a63057ee26500abbbcb8d55",
         "version" : "7.13.1"
+      }
+    },
+    {
+      "identity" : "gptencoder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alfianlosari/GPTEncoder.git",
+      "state" : {
+        "revision" : "a86968867ab4380e36b904a14c42215f71efe8b4",
+        "version" : "1.0.4"
       }
     },
     {

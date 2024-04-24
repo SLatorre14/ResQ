@@ -15,6 +15,12 @@
 		888E98092B94E0FF000907D8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888E98082B94E0FF000907D8 /* ContentView.swift */; };
 		888E980B2B94E102000907D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 888E980A2B94E102000907D8 /* Assets.xcassets */; };
 		888E980E2B94E102000907D8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 888E980D2B94E102000907D8 /* Preview Assets.xcassets */; };
+		88AD8B4A2BC5BF6400E96491 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD8B492BC5BF6400E96491 /* ImagePicker.swift */; };
+		88DC86E82BC8236B00D9A95C /* MessageOwner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DC86E72BC8236B00D9A95C /* MessageOwner.swift */; };
+		88DC86EB2BC8249000D9A95C /* ChatGPTSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 88DC86EA2BC8249000D9A95C /* ChatGPTSwift */; };
+		88DC86EF2BC825A500D9A95C /* ChatMessageBot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DC86EE2BC825A500D9A95C /* ChatMessageBot.swift */; };
+		88DC86F12BC825CF00D9A95C /* BotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DC86F02BC825CF00D9A95C /* BotViewModel.swift */; };
+		88DC86F32BC826D400D9A95C /* BotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DC86F22BC826D400D9A95C /* BotView.swift */; };
 		88F0744B2BADF5CC00D0A9F9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 88F0744A2BADF5CC00D0A9F9 /* FirebaseAnalytics */; };
 		88F0744D2BADF5CC00D0A9F9 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 88F0744C2BADF5CC00D0A9F9 /* FirebaseAnalyticsSwift */; };
 		88F0744F2BADF5CC00D0A9F9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 88F0744E2BADF5CC00D0A9F9 /* FirebaseAuth */; };
@@ -44,6 +50,11 @@
 		888E98082B94E0FF000907D8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		888E980A2B94E102000907D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		888E980D2B94E102000907D8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		88AD8B492BC5BF6400E96491 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		88DC86E72BC8236B00D9A95C /* MessageOwner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOwner.swift; sourceTree = "<group>"; };
+		88DC86EE2BC825A500D9A95C /* ChatMessageBot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageBot.swift; sourceTree = "<group>"; };
+		88DC86F02BC825CF00D9A95C /* BotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotViewModel.swift; sourceTree = "<group>"; };
+		88DC86F22BC826D400D9A95C /* BotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotView.swift; sourceTree = "<group>"; };
 		88F074592BAE171700D0A9F9 /* MainChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainChatView.swift; sourceTree = "<group>"; };
 		88FBB18E2BAB986400B4E390 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		88FBB1902BAB988A00B4E390 /* AuthenticationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
@@ -62,6 +73,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				88F0744D2BADF5CC00D0A9F9 /* FirebaseAnalyticsSwift in Frameworks */,
+				88DC86EB2BC8249000D9A95C /* ChatGPTSwift in Frameworks */,
 				88F074512BADF5CC00D0A9F9 /* FirebaseCrashlytics in Frameworks */,
 				88F0744F2BADF5CC00D0A9F9 /* FirebaseAuth in Frameworks */,
 				88F074532BADF5CC00D0A9F9 /* FirebaseFirestore in Frameworks */,
@@ -112,6 +124,7 @@
 		888E98052B94E0FF000907D8 /* pruebaApp */ = {
 			isa = PBXGroup;
 			children = (
+				88DC86E62BC8234800D9A95C /* Bot */,
 				88F074582BAE16FA00D0A9F9 /* Chat */,
 				88FBB1942BAB9AE300B4E390 /* Info.plist */,
 				CE59BDA22BABCCF500F20208 /* SlideintoScreenView.swift */,
@@ -126,6 +139,7 @@
 				888E980A2B94E102000907D8 /* Assets.xcassets */,
 				888E980C2B94E102000907D8 /* Preview Content */,
 				883ED5B72BACBCA500DF9FC1 /* MapView.swift */,
+				88AD8B492BC5BF6400E96491 /* ImagePicker.swift */,
 			);
 			path = pruebaApp;
 			sourceTree = "<group>";
@@ -136,6 +150,17 @@
 				888E980D2B94E102000907D8 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		88DC86E62BC8234800D9A95C /* Bot */ = {
+			isa = PBXGroup;
+			children = (
+				88DC86E72BC8236B00D9A95C /* MessageOwner.swift */,
+				88DC86EE2BC825A500D9A95C /* ChatMessageBot.swift */,
+				88DC86F02BC825CF00D9A95C /* BotViewModel.swift */,
+				88DC86F22BC826D400D9A95C /* BotView.swift */,
+			);
+			path = Bot;
 			sourceTree = "<group>";
 		};
 		88F074582BAE16FA00D0A9F9 /* Chat */ = {
@@ -173,6 +198,7 @@
 				88F074542BADF5CC00D0A9F9 /* FirebaseFirestoreSwift */,
 				88F074562BADF5CC00D0A9F9 /* FirebaseStorage */,
 				88F0745C2BAE332F00D0A9F9 /* SDWebImageSwiftUI */,
+				88DC86EA2BC8249000D9A95C /* ChatGPTSwift */,
 			);
 			productName = pruebaApp;
 			productReference = 888E98032B94E0FF000907D8 /* pruebaApp.app */;
@@ -205,6 +231,7 @@
 			packageReferences = (
 				88F074492BADF5CC00D0A9F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				88F0745B2BAE332F00D0A9F9 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				88DC86E92BC8249000D9A95C /* XCRemoteSwiftPackageReference "ChatGPTSwift" */,
 			);
 			productRefGroup = 888E98042B94E0FF000907D8 /* Products */;
 			projectDirPath = "";
@@ -235,16 +262,21 @@
 			files = (
 				88FBB18F2BAB986500B4E390 /* RootView.swift in Sources */,
 				88F0745A2BAE171700D0A9F9 /* MainChatView.swift in Sources */,
+				88DC86F12BC825CF00D9A95C /* BotViewModel.swift in Sources */,
 				883ED5B82BACBCA500DF9FC1 /* MapView.swift in Sources */,
 				9B5F24242BA3970900BD3CAB /* ChatView.swift in Sources */,
 				CE59BDA32BABCCF500F20208 /* SlideintoScreenView.swift in Sources */,
+				88DC86F32BC826D400D9A95C /* BotView.swift in Sources */,
 				888E98092B94E0FF000907D8 /* ContentView.swift in Sources */,
 				88FBB1922BAB988C00B4E390 /* AuthenticationManager.swift in Sources */,
 				88FBB1932BAB988C00B4E390 /* SignInView.swift in Sources */,
 				9B5F24202BA38E2F00BD3CAB /* MenuView.swift in Sources */,
 				887624642BB8BD82003F12EC /* NewMessageView.swift in Sources */,
+				88DC86EF2BC825A500D9A95C /* ChatMessageBot.swift in Sources */,
 				888E98072B94E0FF000907D8 /* pruebaAppApp.swift in Sources */,
 				CE59BD9F2BAB726C00F20208 /* PageModel.swift in Sources */,
+				88AD8B4A2BC5BF6400E96491 /* ImagePicker.swift in Sources */,
+				88DC86E82BC8236B00D9A95C /* MessageOwner.swift in Sources */,
 				880DF4992BA52EE100762F6D /* AuthenticationView.swift in Sources */,
 				CE59BDA12BAB756F00F20208 /* PageView.swift in Sources */,
 			);
@@ -384,8 +416,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -417,8 +448,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -457,6 +487,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		88DC86E92BC8249000D9A95C /* XCRemoteSwiftPackageReference "ChatGPTSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/alfianlosari/ChatGPTSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		88F074492BADF5CC00D0A9F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -476,6 +514,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		88DC86EA2BC8249000D9A95C /* ChatGPTSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 88DC86E92BC8249000D9A95C /* XCRemoteSwiftPackageReference "ChatGPTSwift" */;
+			productName = ChatGPTSwift;
+		};
 		88F0744A2BADF5CC00D0A9F9 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 88F074492BADF5CC00D0A9F9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

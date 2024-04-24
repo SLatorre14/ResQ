@@ -150,6 +150,8 @@ struct MainChatView: View {
               
                 .padding()
                 
+               
+                
                 ScrollView{
                     ForEach(vm.recentMessages) { recentMessage in
                         
@@ -174,7 +176,7 @@ struct MainChatView: View {
                                 }
                                 Spacer()
                                 
-                                Text("Hola")
+                                
                                 
                             }
                             
