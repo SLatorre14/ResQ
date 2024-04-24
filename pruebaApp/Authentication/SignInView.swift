@@ -262,7 +262,7 @@ struct SignInView: View {
                 }
                 
                 
-                if let errorMessage = errorMessage {
+                if !errorMessage.isEmpty {
                    
                     Text(errorMessage)
                         .foregroundColor(.red)
