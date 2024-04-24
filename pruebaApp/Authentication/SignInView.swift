@@ -148,7 +148,7 @@ struct SignInView: View {
             ScrollView{
                 
                 VStack{
-                    Picker(selection: $isLoginMode, label: Text("Pickier here")){
+                    Picker(selection: $isLoginMode, label: Text("")){
                         Text("Login")
                             .tag(true)
                         Text("Create Account")
@@ -201,11 +201,11 @@ struct SignInView: View {
                                 .foregroundColor(.white)
                                 .frame(height: 55)
                                 .frame(width: 250)
-                                .background(Color("LightGreen"))
+                                .background(Color("LightGreen" ))
                                 .cornerRadius(10)
                         }
-                        .disabled(!isPasswordValid)
-                        .opacity(!isPasswordValid ? 0.5 : 1.0)
+                        .disabled((!isPasswordValid) && (!isLoginMode))
+                        .opacity((!isPasswordValid && !isLoginMode) ? 0.5 : 1.0)
                     }
                     
                     if isLoginMode{
@@ -234,7 +234,7 @@ struct SignInView: View {
                         Text("Password must contain:")
                             .font(.subheadline)
                             .foregroundColor(.gray)
-                        
+                            .padding()
                         Image(systemName: isPasswordLengthValid ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .foregroundColor(isPasswordLengthValid ? .green : .red)
                         Text("At least 6 characters")
