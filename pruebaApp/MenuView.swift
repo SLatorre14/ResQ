@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreMotion
 
 @MainActor
 
@@ -14,6 +15,7 @@ final class CarrusselViewModel: ObservableObject{
     @Published var errorMessage = ""
     private let cacheExpirationInterval: TimeInterval = 3600
     private let cacheKey = "cachedNews"
+    
     
     init() {
            fetchNewsIfNeeded()
@@ -175,6 +177,8 @@ struct MenuView: View {
     @StateObject private var viewModel = MenuViewModel()
     @State var isLoggedIn: Bool = false
     @State var toggleIsOn: Bool = true
+    @State var showingAlert: Bool = false
+    let motionManager = CMMotionManager()
     
     var body: some View {
         NavigationView {
@@ -262,6 +266,30 @@ struct MenuView: View {
                                 .padding(.top)
                             }
                             
+                            VStack{
+                                        }.alert(isPresented: $showingAlert) {
+                                            Alert(title: Text("Shake Detected"), message: Text("You shook your device!"), dismissButton: .default(Text("OK")))
+                                        }
+                                    }
+                                    .onAppear {
+                                        if motionManager.isAccelerometerAvailable {
+                                            motionManager.accelerometerUpdateInterval = 0.1
+                                            motionManager.startAccelerometerUpdates(to: .main) { data, error in
+                                                guard let data = data else { return }
+                                                
+                                                let accelerationThreshold: Double = 1.5 // Umbral de aceleración para detectar la sacudida
+                                                let totalAcceleration = sqrt(pow(data.acceleration.x, 2) + pow(data.acceleration.y, 2) + pow(data.acceleration.z, 2))
+                                                
+                                                if totalAcceleration >= accelerationThreshold {
+                                                    showingAlert = true // Mostrar la alerta cuando se detecta una sacudida
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .onDisappear {
+                                        motionManager.stopAccelerometerUpdates()
+                                    }
+                            
                             
                             
                             
@@ -315,7 +343,7 @@ struct MenuView: View {
     }
     
     
-}
+
 
 struct MenuView_Previews: PreviewProvider {
     static var previews: some View {
