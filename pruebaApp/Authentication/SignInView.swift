@@ -77,7 +77,7 @@ final class SignInViewModel: ObservableObject{
         
         init(firebaseManager: FirebaseManager = FirebaseManager.shared) {
             self.firebaseManager = firebaseManager
-            loadSavedCredentials() // Cargar las credenciales guardadas al inicializar el ViewModel
+            loadSavedCredentials()
         }
     
     private func saveCredentials() {
