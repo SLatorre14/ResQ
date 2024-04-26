@@ -114,6 +114,7 @@ class MainChatViewModel: ObservableObject{
 struct MainChatView: View {
     @State var navigateToChat = false
     @ObservedObject  var vm = MainChatViewModel()
+    @ObservedObject var monitor = NetworkMonitor()
     
     private var chatViewModel = ChatViewModel(chatUser: nil)
     
@@ -135,13 +136,27 @@ struct MainChatView: View {
                             .font(.system(size: 32, weight: .bold))
                  
                         HStack{
-                            Circle()
-                                .foregroundColor(Color("LightGreen"))
-                                .frame(width: 14, height: 14)
-                            
-                            Text("Online")
-                                .font(.system(size:12))
-                                .foregroundColor(Color(.lightGray))
+                            if monitor.isConnected
+                            {
+                                Circle()
+                                    .foregroundColor(Color("LightGreen"))
+                                    .frame(width: 14, height: 14)
+                                
+                                Text("Online")
+                                    .font(.system(size:12))
+                                    .foregroundColor(Color(.lightGray))
+                            }
+                            else
+                            {
+                                Circle()
+                                    .foregroundColor(Color(.red))
+                                    .frame(width: 14, height: 14)
+                                
+                                Text("Offline")
+                                    .font(.system(size:12))
+                                    .foregroundColor(Color(.lightGray))
+                                
+                            }
                         }
                         
                     }
