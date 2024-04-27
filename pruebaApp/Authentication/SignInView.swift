@@ -228,6 +228,7 @@ struct SignInView: View {
                     
                     Toggle("Remember Credentials", isOn: $viewModel.rememberCredentials)
                                            .padding()
+                                           .foregroundColor(.black)
                             
                     Button{
                         handleAction()
