@@ -16,7 +16,7 @@ class FirebaseManager: NSObject {
     let auth: Auth
     let storage: Storage
     let firestore: Firestore
-    
+
     static let shared = FirebaseManager()
     
     func uploadImage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {

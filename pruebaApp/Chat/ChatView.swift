@@ -197,6 +197,7 @@ struct ChatView: View {
     @State var image: UIImage?
     @State var messages: [String] = []
     @State var showImagePicker = false
+    @ObservedObject var monitor = NetworkMonitor()
     @ObservedObject var vm: ChatViewModel
    
     
@@ -288,29 +289,54 @@ struct ChatView: View {
                         .foregroundColor(Color("LighterGreen"))
                 }
                     
-                        
-                    TextField("Type something", text: $vm.messageText)
-                        .padding()
-                        .background(Color.gray.opacity(0.1))
-                        .foregroundColor(Color.black)
-                        .cornerRadius(10)
-                        .onSubmit {
-                            vm.sendMessage()
-                                                       
-                        }
                     
-                    Button {
-                 
-                        vm.sendMessage()
+                    if monitor.isConnected{
                         
-                    } label: {
-                        Image(systemName: "paperplane.fill")
-                            .foregroundColor(Color("LighterGreen"))
+                        TextField("Type something", text: $vm.messageText)
+                            .padding()
+                            .background(Color.gray.opacity(0.1))
+                            .foregroundColor(Color.black)
+                            .cornerRadius(10)
+                            .onSubmit {
+                                vm.sendMessage()
+                                                           
+                            }
+                        
+                        Button {
+                     
+                            vm.sendMessage()
+                            
+                        } label: {
+                            Image(systemName: "paperplane.fill")
+                                .foregroundColor(Color("LighterGreen"))
+                        }
+                        .font(.system(size: 26))
+                        .padding(.horizontal, 10)
+                        .disabled(vm.isMessageTextEmpty)
+                        .opacity(vm.isMessageTextEmpty ? 0.5 : 1.0)
+                    } else {
+                        
+                        Text("There is no internet connection")
+                            .padding()
+                            .background(Color.gray.opacity(0.1))
+                            .foregroundColor(Color.black)
+                            .cornerRadius(10)
+                            
+                        
+                        Button {
+                     
+                        } label: {
+                            Image(systemName: "paperplane.fill")
+                                .foregroundColor(Color("LighterGreen"))
+                        }
+                        .font(.system(size: 26))
+                        .padding(.horizontal, 10)
+                        .disabled(true)
+                        .opacity(0.5)
+                        
                     }
-                    .font(.system(size: 26))
-                    .padding(.horizontal, 10)
-                    .disabled(vm.isMessageTextEmpty)
-                    .opacity(vm.isMessageTextEmpty ? 0.5 : 1.0)
+                    
+                    
                 }
                 .padding()
                 .background(Color.white)
