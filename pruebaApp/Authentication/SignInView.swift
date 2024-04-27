@@ -71,8 +71,35 @@ final class SignInViewModel: ObservableObject{
     @Published var email = ""
     @Published var password = ""
     @State var loginStatusMessage = ""
+    @Published var rememberCredentials = false
+    
+    private let firebaseManager: FirebaseManager
+        
+        init(firebaseManager: FirebaseManager = FirebaseManager.shared) {
+            self.firebaseManager = firebaseManager
+            loadSavedCredentials()
+        }
+    
+    private func saveCredentials() {
+            UserDefaults.standard.set(email, forKey: "savedEmail")
+            UserDefaults.standard.set(password, forKey: "savedPassword")
+        }
+    
+    private func loadSavedCredentials() {
+            if let savedEmail = UserDefaults.standard.string(forKey: "savedEmail"),
+               let savedPassword = UserDefaults.standard.string(forKey: "savedPassword") {
+                email = savedEmail
+                password = savedPassword
+                rememberCredentials = true // Marcar que se están recordando las credenciales
+            }
+        }
+    
+    
     
     func loginUser(completion: @escaping (Bool, String?) -> Void) {
+        if rememberCredentials {
+                    saveCredentials()
+                }
         FirebaseManager.shared.auth.signIn(withEmail: email, password: password) {
             result, error in
                 if let error = error{
@@ -83,7 +110,9 @@ final class SignInViewModel: ObservableObject{
                     return
                     
                 }
+            
                 print("Success logging in user: \(result?.user.uid ?? "")")
+            
                 completion(true, nil)
                 
         }
@@ -185,11 +214,21 @@ struct SignInView: View {
                         .keyboardType(.emailAddress)
                         .autocapitalization(.none)
                         .cornerRadius(10)
+                        .onAppear {
+                            viewModel.email = UserDefaults.standard.string(forKey: "savedEmail") ?? ""
+                        }
                     
                     SecureField("Password", text: $viewModel.password)
                         .padding()
                         .background(Color.gray.opacity(0.4))
                         .cornerRadius(10)
+                        .onAppear {
+                         viewModel.password = UserDefaults.standard.string(forKey: "savedPassword") ?? ""
+                        }
+                    
+                    Toggle("Remember Credentials", isOn: $viewModel.rememberCredentials)
+                                           .padding()
+                                           .foregroundColor(.black)
                             
                     Button{
                         handleAction()
