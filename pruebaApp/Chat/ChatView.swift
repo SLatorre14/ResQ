@@ -272,7 +272,7 @@ struct ChatView: View {
     @State var showImagePicker = false
     @ObservedObject var monitor = NetworkMonitor()
     @ObservedObject var vm: ChatViewModel
-   
+    
     
     var body: some View {
         VStack {
@@ -300,7 +300,7 @@ struct ChatView: View {
                                         HStack{
                                             Text(message.text)
                                                 .foregroundColor(Color.white)
-                                                
+                                            
                                         }
                                         .padding()
                                         .background(Color("LighterGreen"))
@@ -319,10 +319,10 @@ struct ChatView: View {
                                         .background(Color.gray.opacity(0.15))
                                         .cornerRadius(20)
                                         .padding(.horizontal, 16)
-                                   
+                                        
                                         Spacer()
                                     }
-
+                                    
                                 }
                                 
                             }
@@ -350,19 +350,8 @@ struct ChatView: View {
                                             .font(.system(size: 24)) // Customize the size as needed
                                     }
                                 }
-                             
-                                
                             }
-                            
-                            
-
-                            
                         }
-                        
-                     
-                        
-                        
-                        
                         HStack{
                             Spacer()
                         }
@@ -374,19 +363,21 @@ struct ChatView: View {
                         }
                         
                     }
-                    
-                    
-                    
                 }
-                
-                
-            
-                        
-                    
-               
             }
             .safeAreaInset(edge: .bottom){
                 HStack {
+                    //This first button is the camera option button.
+                    Button
+                    {
+                        
+                    }
+                label:
+                    {
+                        Image(systemName: "camera")
+                            .font(.system(size: 30))
+                            .foregroundColor(Color("LighterGreen"))
+                    }
                     Button{
                         showImagePicker.toggle()
                     }
@@ -403,15 +394,12 @@ struct ChatView: View {
                         .cornerRadius(10)
                         .onSubmit {
                             vm.sendMessage()
-                                                       
+                            
                         }
                     
                     if monitor.isConnected{
-                        
-                        
-                        
                         Button {
-                     
+                            
                             vm.sendMessage()
                             
                         } label: {
@@ -423,12 +411,10 @@ struct ChatView: View {
                         .disabled(vm.isMessageTextEmpty)
                         .opacity(vm.isMessageTextEmpty ? 0.5 : 1.0)
                     } else {
-                        
-                        
                         Button {
                             
                             vm.saveMessagesCache()
-                     
+                            
                         } label: {
                             Image(systemName: "paperplane.fill")
                                 .foregroundColor(Color("LighterGreen"))
@@ -436,11 +422,7 @@ struct ChatView: View {
                         .font(.system(size: 26))
                         .padding(.horizontal, 10)
                         .opacity(vm.isMessageTextEmpty ? 0.5 : 1.0)
-                     
-                        
                     }
-                    
-                    
                 }
                 .padding()
                 .background(Color.white)
@@ -448,8 +430,8 @@ struct ChatView: View {
             .background(Color.gray.opacity(0.08))
             
             
-           
-           
+            
+            
         }
         .fullScreenCover(isPresented: $showImagePicker, onDismiss: nil){
             ImagePicker(image: $image)}
@@ -460,16 +442,16 @@ struct ChatView: View {
         }
         
         .navigationTitle("Brigadier")
-            .navigationBarItems(trailing: Button(action: {
-                vm.count += 1
-            }, label: {
-                
-            }))
-            .onAppear{vm.loadMessageCache()}
-            .onDisappear{ vm.firestoreListener?.remove()}
+        .navigationBarItems(trailing: Button(action: {
+            vm.count += 1
+        }, label: {
+            
+        }))
+        .onAppear{vm.loadMessageCache()}
+        .onDisappear{ vm.firestoreListener?.remove()}
         
-            
-            
+        
+        
     }
     
     
