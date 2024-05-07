@@ -24,6 +24,8 @@ class ChatViewModel: ObservableObject{
     @Published var messageText = ""
     @Published var selectedImage: UIImage?
     @Published var chatMessages = [ChatMessage]()
+    @Published var cachedMessage: String = ""
+    @Published var mergedMessages = [ChatMessage]()
     
     var isMessageTextEmpty: Bool{
         return messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -35,6 +37,9 @@ class ChatViewModel: ObservableObject{
         self.chatUser = chatUser
         self.selectedImage = selectedImage
         fetchMessages()
+        loadMessageCache()
+        print(cachedMessage)
+        
     }
     
     var firestoreListener: ListenerRegistration?
@@ -51,7 +56,7 @@ class ChatViewModel: ObservableObject{
                 return
             }
             
-          
+            
             querySnapshot?.documentChanges.forEach({ change in
                 if change.type == .added{
                     
@@ -65,7 +70,7 @@ class ChatViewModel: ObservableObject{
             }
             
         }
-       
+        
         
     }
     
@@ -93,7 +98,7 @@ class ChatViewModel: ObservableObject{
                             return
                         }
                         print("Succesfully sent image message")
-                        self.persistRecentMessage()
+                        self.persistRecentMessage(messageText: self.messageText)
                         self.selectedImage = nil // Reset selected image
                     }
                     
@@ -120,7 +125,7 @@ class ChatViewModel: ObservableObject{
                 
                 print("Succesfully sent message")
                 
-                self.persistRecentMessage()
+                self.persistRecentMessage(messageText: self.messageText)
                 self.messageText = ""
                 self.count += 1
                 
@@ -139,12 +144,77 @@ class ChatViewModel: ObservableObject{
                 
             }
         }
+        
+        
+        
     }
+    
+    
+    
+    func saveMessagesCache() {
+        if !isMessageTextEmpty {
+            cachedMessage = messageText
+            messageText = "" // Reset message text after saving
+            self.count += 1
+        }
+        UserDefaults.standard.set(cachedMessage, forKey: "unsentMessage")
+        
+        
+        
+    }
+    
+    func loadMessageCache(){
+        cachedMessage = UserDefaults.standard.array(forKey: "unsentMessage") as? String ?? ""
+    }
+    
+   
+    
+    func retrySendingMessages() {
+        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        guard let toId = chatUser?.uid else { return }
+        
+        
+        let document = FirebaseManager.shared.firestore.collection("messages").document(fromId).collection(toId).document()
+        let messageData = ["fromId": fromId, "toId": toId, "text": cachedMessage, "timeStamp": Timestamp()] as [String : Any]
+        
+        document.setData(messageData) { error in
+            if let error = error {
+                print("Error sending message from cache:", error)
+                return
+            }
+            
+            print("Successfully sent message from cache")
+            self.persistRecentMessage(messageText: self.cachedMessage)
+            
+        }
+        
+        let recipientMessageDocument = FirebaseManager.shared.firestore.collection("messages").document(toId).collection(fromId).document()
+        
+        recipientMessageDocument.setData(messageData) { error in
+            if let error = error {
+                print("Error receiving message from cache:", error)
+                return
+            }
+            print("Received Message from cache")
+        }
+            
+        
+        
+        // After retrying, remove unsent messages from UserDefaults and reset cachedMessages
+        UserDefaults.standard.removeObject(forKey: "unsentMessage")
+        
+        
+        
+    }
+
+    
         
         
     
-    private func persistRecentMessage(){
+    private func persistRecentMessage(messageText: String){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid
+        else { return }
+        guard let uemail = FirebaseManager.shared.auth.currentUser?.email
         else { return }
         
         guard let toid = self.chatUser?.uid else { return }
@@ -153,10 +223,11 @@ class ChatViewModel: ObservableObject{
         
         let data = [
             "timeStamp": Timestamp(),
-            "text": self.messageText,
+            "text": messageText,
             "fromId": uid,
             "toId": toid,
-            "email": chatUser!.email
+            "emailSender": chatUser!.email,
+            "emailReceiver": uemail
         
         ] as [String : Any]
         
@@ -174,7 +245,8 @@ class ChatViewModel: ObservableObject{
             "text": self.messageText,
             "fromId": toid,
             "toId": uid,
-            "email": chatUser!.email
+            "emailSender": chatUser!.email,
+            "emailReceiver": uemail
         ] as [String : Any]
         
         recipientMessageDocument.setData(dataRecipient) { error in
@@ -185,8 +257,9 @@ class ChatViewModel: ObservableObject{
         }
         
         
-                
+        cachedMessage = ""
     }
+    
     
     @Published var count = 0
     
@@ -257,6 +330,40 @@ struct ChatView: View {
                         }
                         
                         HStack{
+                            if !vm.cachedMessage.isEmpty{
+                                HStack(alignment: .bottom){
+                                    
+                                    VStack{
+                                        Text(vm.cachedMessage)
+                                            .foregroundColor(Color.white)
+                                    }
+                                    .padding()
+                                    .background(Color("LighterGreen"))
+                                    .cornerRadius(20)
+                                    
+                                    
+                                    Button{ vm.retrySendingMessages()
+                                        
+                                    }label: {
+                                        Image(systemName: "arrow.clockwise.circle")
+                                            .foregroundColor(.red) // Customize the color as needed
+                                            .font(.system(size: 24)) // Customize the size as needed
+                                    }
+                                }
+                             
+                                
+                            }
+                            
+                            
+
+                            
+                        }
+                        
+                     
+                        
+                        
+                        
+                        HStack{
                             Spacer()
                         }
                         .id("Empty")
@@ -289,18 +396,19 @@ struct ChatView: View {
                         .foregroundColor(Color("LighterGreen"))
                 }
                     
+                    TextField("Type something", text: $vm.messageText)
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .foregroundColor(Color.black)
+                        .cornerRadius(10)
+                        .onSubmit {
+                            vm.sendMessage()
+                                                       
+                        }
                     
                     if monitor.isConnected{
                         
-                        TextField("Type something", text: $vm.messageText)
-                            .padding()
-                            .background(Color.gray.opacity(0.1))
-                            .foregroundColor(Color.black)
-                            .cornerRadius(10)
-                            .onSubmit {
-                                vm.sendMessage()
-                                                           
-                            }
+                        
                         
                         Button {
                      
@@ -316,14 +424,10 @@ struct ChatView: View {
                         .opacity(vm.isMessageTextEmpty ? 0.5 : 1.0)
                     } else {
                         
-                        Text("There is no internet connection")
-                            .padding()
-                            .background(Color.gray.opacity(0.1))
-                            .foregroundColor(Color.black)
-                            .cornerRadius(10)
-                            
                         
                         Button {
+                            
+                            vm.saveMessagesCache()
                      
                         } label: {
                             Image(systemName: "paperplane.fill")
@@ -331,8 +435,8 @@ struct ChatView: View {
                         }
                         .font(.system(size: 26))
                         .padding(.horizontal, 10)
-                        .disabled(true)
-                        .opacity(0.5)
+                        .opacity(vm.isMessageTextEmpty ? 0.5 : 1.0)
+                     
                         
                     }
                     
@@ -361,7 +465,9 @@ struct ChatView: View {
             }, label: {
                 
             }))
+            .onAppear{vm.loadMessageCache()}
             .onDisappear{ vm.firestoreListener?.remove()}
+        
             
             
     }

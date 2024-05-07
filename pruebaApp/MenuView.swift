@@ -19,6 +19,7 @@ final class CarrusselViewModel: ObservableObject{
     
     init() {
            fetchNewsIfNeeded()
+        print("1")
        }
        
     
@@ -86,6 +87,7 @@ struct CarrouselView: View{
                 ForEach(vm.news.indices, id: \.self) { index in
                     VStack(spacing: 1.0){
                         Text(vm.news[index].title)
+                            .foregroundStyle(.black)
                     }
                     .frame(width: screenWidth * widthScale, height: cardHeight)
                     .background(Color("LightWhite"))
@@ -338,9 +340,9 @@ struct MenuView: View {
                         }
                             
                     }
-                }
-        }
+        }.onAppear()
     }
+}
     
     
 

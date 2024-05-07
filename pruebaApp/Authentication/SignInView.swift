@@ -143,7 +143,7 @@ var provider = OAuthProvider(providerID: "microsoft.com")
 struct SignInView: View {
     
     var isPasswordValid: Bool {
-            let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"
+            let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$"
             let passwordPredicate = NSPredicate(format: "SELF MATCHES %@", passwordRegex)
             return passwordPredicate.evaluate(with: viewModel.password)
         }

@@ -13,7 +13,7 @@ struct RecentMessage: Identifiable {
     var id: String { documentId }
     
     let documentId: String
-    let text, fromId, toId, email: String
+    let text, fromId, toId, emailSender, emailReceiver: String
     let timeStamp: Timestamp
     
     init(documentId: String, data: [String : Any]){
@@ -21,7 +21,8 @@ struct RecentMessage: Identifiable {
         self.text = data["text"] as? String ?? ""
         self.fromId = data["fromId"] as? String ?? ""
         self.toId = data["toId"] as? String ?? ""
-        self.email = data["email"] as? String ?? ""
+        self.emailSender = data["emailSender"] as? String ?? ""
+        self.emailReceiver = data["emailReceiver"] as? String ?? ""
         self.timeStamp = data["timeStamp"] as? Timestamp ?? Timestamp(date: Date())
        
     }
@@ -115,6 +116,7 @@ struct MainChatView: View {
     @State var navigateToChat = false
     @ObservedObject  var vm = MainChatViewModel()
     @ObservedObject var monitor = NetworkMonitor()
+  
     
     private var chatViewModel = ChatViewModel(chatUser: nil)
     
@@ -172,7 +174,9 @@ struct MainChatView: View {
                         
                         Button{
                             let uid = FirebaseManager.shared.auth.currentUser?.uid == recentMessage.fromId ? recentMessage.toId : recentMessage.fromId
-                            self.chatUser = ChatUser.init(email: recentMessage.email, uid: uid)
+                            let email = FirebaseManager.shared.auth.currentUser?.email == recentMessage.emailSender ? recentMessage.emailReceiver : recentMessage.emailSender
+                            
+                            self.chatUser = ChatUser.init(email: email, uid: uid)
                             self.chatViewModel.chatUser = self.chatUser
                             self.chatViewModel.fetchMessages()
                             self.navigateToChat.toggle()
@@ -182,7 +186,7 @@ struct MainChatView: View {
                                     .foregroundColor(Color(.black))
                                     .font(.system(size: 32))
                                 VStack(alignment: .leading) {
-                                    Text(recentMessage.email)
+                                    Text(FirebaseManager.shared.auth.currentUser?.email == recentMessage.emailSender ? recentMessage.emailReceiver : recentMessage.emailSender)
                                         .foregroundColor(Color(.black))
                                     Text(recentMessage.text)
                                         .foregroundColor(Color(.lightGray))
