@@ -179,6 +179,7 @@ struct SignInView: View {
     @State var loginStatusMessage = ""
     @State var isLoginMode = false
     @StateObject private var viewModel = SignInViewModel()
+    @ObservedObject var monitor = NetworkMonitor()
     @Binding var showSigninView: Bool
     var body: some View {
         NavigationView{
@@ -251,8 +252,8 @@ struct SignInView: View {
                                 .background(Color("LightGreen" ))
                                 .cornerRadius(10)
                         }
-                        .disabled((!isPasswordValid) && (!isLoginMode))
-                        .opacity((!isPasswordValid && !isLoginMode) ? 0.5 : 1.0)
+                        .disabled((!isPasswordValid) && (!isLoginMode) && (!monitor.isConnected) )
+                        .opacity((!isPasswordValid && !isLoginMode && !monitor.isConnected) ? 0.5 : 1.0)
                     }
                     
                     if isLoginMode{
@@ -268,7 +269,10 @@ struct SignInView: View {
                                 .frame(width: 250)
                                 .background(Color("LightGreen"))
                                 .cornerRadius(10)
+                            
                         }
+                        .disabled(!monitor.isConnected)
+                        .opacity(!monitor.isConnected ? 0.5 : 1.0)
                     }
                     
                     
@@ -316,6 +320,7 @@ struct SignInView: View {
                 }
                 
             }.navigationTitle(isLoginMode ? "Log In": "Create Account")
+                .navigationBarItems(trailing: noInternetPopup)
             
         }.fullScreenCover(isPresented: $showImagePicker, onDismiss: nil){
             ImagePicker(image: $image)
@@ -327,6 +332,24 @@ struct SignInView: View {
         
     }
     @State var image: UIImage?
+    
+    private var noInternetPopup: some View {
+            if !monitor.isConnected {
+                return AnyView(
+                    Button(action: {
+                        // Handle action when tapped
+                    }) {
+                        Text("No Internet Connection")
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(Color.red)
+                            .cornerRadius(8)
+                    }
+                )
+            } else {
+                return AnyView(EmptyView())
+            }
+        }
     
     private func handleAction() {
         if isLoginMode {

@@ -13,13 +13,12 @@ import CoreMotion
 final class CarrusselViewModel: ObservableObject{
     @Published var news = [Card]()
     @Published var errorMessage = ""
-    private let cacheExpirationInterval: TimeInterval = 3600
+    private let cacheExpirationInterval: TimeInterval = 1200
     private let cacheKey = "cachedNews"
     
     
     init() {
-           fetchNewsIfNeeded()
-        print("1")
+        fetchNewsIfNeeded()
        }
        
     
@@ -37,40 +36,41 @@ final class CarrusselViewModel: ObservableObject{
             return
         }
         
-        // Data is expired or not available, fetch from Firebase
-        fetchAllNews()
+        Task {
+            await fetchAllNews()
+            
+        }
+        
     }
         
-       private func fetchAllNews() {
-          
-           FirebaseManager.shared.firestore.collection("news").getDocuments { [weak self] documentsSnapshot, error in
-               guard let self = self else { return }
-               
-               if let error = error {
-                   self.errorMessage = "Failed to fetch news: \(error)"
-                   print("Failed to fetch news: \(error)")
-                   return
-               }
-               
-               var fetchedNews = [Card]()
-               documentsSnapshot?.documents.forEach { snapshot in
-                   let data = snapshot.data()
-                   let title = data["title"] as? String ?? ""
-                   fetchedNews.append(Card(title: title))
-                   print("News found in server")
-               }
-               
-               self.news = fetchedNews
-               
-               // Save fetched news to cache
-               if let encodedData = try? JSONEncoder().encode(fetchedNews) {
-                   print("Saving in cache " , Date())
-                   UserDefaults.standard.set(encodedData, forKey: "cachedNews")
-                   UserDefaults.standard.set(Date(), forKey: "cachedNews_timestamp")
-               }
-           }
-       }
-   }
+    // Modify fetchAllNews function to use async/await
+    private func fetchAllNews() async {
+        do {
+            let documentsSnapshot = try await FirebaseManager.shared.firestore.collection("news").getDocuments()
+            
+            var fetchedNews = [Card]()
+            documentsSnapshot.documents.forEach { snapshot in
+                let data = snapshot.data()
+                let title = data["title"] as? String ?? ""
+                fetchedNews.append(Card(title: title))
+                print("News found in server")
+            }
+            
+            self.news = fetchedNews
+            
+            // Save fetched news to cache
+            if let encodedData = try? JSONEncoder().encode(fetchedNews) {
+                print("Saving in cache ", Date())
+                UserDefaults.standard.set(encodedData, forKey: "cachedNews")
+                UserDefaults.standard.set(Date(), forKey: "cachedNews_timestamp")
+            }
+        } catch {
+            self.errorMessage = "Failed to fetch news: \(error)"
+            print("Failed to fetch news: \(error)")
+        }
+    }
+
+}
 
 struct CarrouselView: View{
     @StateObject private var vm = CarrusselViewModel()

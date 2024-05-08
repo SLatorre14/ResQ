@@ -27,6 +27,8 @@ class ChatViewModel: ObservableObject{
     @Published var cachedMessage: String = ""
     @Published var mergedMessages = [ChatMessage]()
     
+    let messageCache = NSCache<NSString, NSString>()
+    
     var isMessageTextEmpty: Bool{
         return messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -168,15 +170,19 @@ class ChatViewModel: ObservableObject{
             cachedMessage = messageText
             messageText = "" // Reset message text after saving
             self.count += 1
+            messageCache.setObject(cachedMessage as String as NSString, forKey: "unsentMessage")
         }
-        UserDefaults.standard.set(cachedMessage, forKey: "unsentMessage")
+        
         
         
         
     }
     
     func loadMessageCache(){
-        cachedMessage = UserDefaults.standard.array(forKey: "unsentMessage") as? String ?? ""
+        if let cachedMessage = messageCache.object(forKey: "unsentMessage") as String? {
+            self.cachedMessage = cachedMessage
+        }
+        
     }
     
    
@@ -213,7 +219,7 @@ class ChatViewModel: ObservableObject{
         
         
         // After retrying, remove unsent messages from UserDefaults and reset cachedMessages
-        UserDefaults.standard.removeObject(forKey: "unsentMessage")
+        messageCache.removeObject(forKey: "unsentMessage")
         
         
         
