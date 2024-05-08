@@ -38,6 +38,7 @@ struct BotView: View {
                     HStack{
                         TextField("Message ...", text: $viewModel.message, axis:.vertical)
                             .textFieldStyle(.roundedBorder)
+                            .foregroundStyle(Color.black)
                         if viewModel.isWaitingForResponse{
                             ProgressView()
                                 .padding()

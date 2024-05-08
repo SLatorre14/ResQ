@@ -7,6 +7,8 @@
 
 import SwiftUI
 import ChatGPTSwift
+import FirebaseFirestore
+
 @MainActor
 class BotViewModel: ObservableObject{
     let api = ChatGPTAPI(apiKey: "")
@@ -19,6 +21,16 @@ class BotViewModel: ObservableObject{
         chatMessages.append(userMessage)
         message = ""
         isWaitingForResponse = true
+        
+        let ref = FirebaseManager.shared.firestore.collection("messagesBot").document()
+        let data = ["timeStamp": Timestamp()] as [String : Any]
+        ref.setData(data){error in
+            if let error = error{
+                print(error)
+                return
+            }
+
+        }
         
         let assistantMessage = ChatMessageBot(owner: .assistant, "")
         chatMessages.append(assistantMessage)

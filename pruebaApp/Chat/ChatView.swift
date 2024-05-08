@@ -143,6 +143,18 @@ class ChatViewModel: ObservableObject{
                 print("Received Message")
                 
             }
+            
+            let ref = FirebaseManager.shared.firestore.collection("messagesBrig").document()
+            let data = ["timeStamp": Timestamp()] as [String : Any]
+            ref.setData(data){error in
+                if let error = error{
+                    print(error)
+                    return
+                }
+
+            }
+            
+            
         }
         
         

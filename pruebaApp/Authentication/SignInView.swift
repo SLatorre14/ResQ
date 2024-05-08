@@ -85,6 +85,11 @@ final class SignInViewModel: ObservableObject{
             UserDefaults.standard.set(password, forKey: "savedPassword")
         }
     
+    private func eraseCredentials() {
+        UserDefaults.standard.removeObject(forKey: "savedEmail")
+        UserDefaults.standard.removeObject(forKey: "savedPassword")
+    }
+    
     private func loadSavedCredentials() {
             if let savedEmail = UserDefaults.standard.string(forKey: "savedEmail"),
                let savedPassword = UserDefaults.standard.string(forKey: "savedPassword") {
@@ -99,7 +104,9 @@ final class SignInViewModel: ObservableObject{
     func loginUser(completion: @escaping (Bool, String?) -> Void) {
         if rememberCredentials {
                     saveCredentials()
-                }
+        } else{
+            eraseCredentials()
+        }
         FirebaseManager.shared.auth.signIn(withEmail: email, password: password) {
             result, error in
                 if let error = error{
@@ -116,6 +123,7 @@ final class SignInViewModel: ObservableObject{
                 completion(true, nil)
                 
         }
+        
     }
     
     func createNewAccount(completion: @escaping (Bool, String?) -> Void) {
