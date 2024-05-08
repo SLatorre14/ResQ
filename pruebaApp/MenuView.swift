@@ -181,6 +181,7 @@ struct MenuView: View {
     @State var toggleIsOn: Bool = true
     @State var showingAlert: Bool = false
     let motionManager = CMMotionManager()
+    @ObservedObject var monitor = NetworkMonitor()
     
     var body: some View {
         NavigationView {
@@ -270,6 +271,13 @@ struct MenuView: View {
                             
                             VStack{
                                         }.alert(isPresented: $showingAlert) {
+                                            Alert(title: Text("Shake Detected"), message: Text("You shook your device!"), dismissButton: .default(Text("OK")))
+                                        }
+                            VStack{
+                            }.alert(isPresented: Binding<Bool>(
+                                get:{!monitor.isConnected},
+                                set:{ _ in}
+                                )) {
                                             Alert(title: Text("Shake Detected"), message: Text("You shook your device!"), dismissButton: .default(Text("OK")))
                                         }
                                     }
