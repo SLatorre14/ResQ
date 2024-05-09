@@ -127,6 +127,11 @@ final class SignInViewModel: ObservableObject{
     }
     
     func createNewAccount(completion: @escaping (Bool, String?) -> Void) {
+        if rememberCredentials {
+                    saveCredentials()
+        } else{
+            eraseCredentials()
+        }
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password){ result, error in
             if let error = error{
                 let errorMessage = "Failed to log user: \(error)"
@@ -420,6 +425,9 @@ struct SignInView: View {
         let userData =  ["email":  userEmail, "uid": userId ]
         FirebaseManager.shared.firestore.collection("users").document(userId).setData(userData) {
             err in
+            if !monitor.isConnected{
+                return
+            }
             if let err = err{
                 print(err)
                 return

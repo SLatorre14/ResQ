@@ -4,7 +4,6 @@ import SwiftUI
 import Firebase
 import FirebaseFirestore
 
-
 struct ChatMessage: Identifiable{
     
     var id: String { documentId }
@@ -292,11 +291,12 @@ class ChatViewModel: ObservableObject{
 struct ChatView: View {
     @State var selectedImage: UIImage?
     @State var image: UIImage?
+    @State var isPhoto = false
     @State var messages: [String] = []
     @State var showImagePicker = false
     @ObservedObject var monitor = NetworkMonitor()
     @ObservedObject var vm: ChatViewModel
-   
+    
     
     var body: some View {
         VStack {
@@ -324,7 +324,7 @@ struct ChatView: View {
                                         HStack{
                                             Text(message.text)
                                                 .foregroundColor(Color.white)
-                                                
+                                            
                                         }
                                         .padding()
                                         .background(Color("LighterGreen"))
@@ -343,10 +343,10 @@ struct ChatView: View {
                                         .background(Color.gray.opacity(0.15))
                                         .cornerRadius(20)
                                         .padding(.horizontal, 16)
-                                   
+                                        
                                         Spacer()
                                     }
-
+                                    
                                 }
                                 
                             }
@@ -374,19 +374,8 @@ struct ChatView: View {
                                             .font(.system(size: 24)) // Customize the size as needed
                                     }
                                 }
-                             
-                                
                             }
-                            
-                            
-
-                            
                         }
-                        
-                     
-                        
-                        
-                        
                         HStack{
                             Spacer()
                         }
@@ -398,20 +387,32 @@ struct ChatView: View {
                         }
                         
                     }
-                    
-                    
-                    
                 }
-                
-                
-            
-                        
-                    
-               
             }
             .safeAreaInset(edge: .bottom){
                 HStack {
+                    //This first button is the camera option button.
+                    Button
+                    {
+                        //Checks if there is any camera available
+                        if UIImagePickerController.isSourceTypeAvailable(.camera)
+                        {
+                            isPhoto = true
+                            showImagePicker.toggle()
+                        }
+                        else
+                        {
+                            print("No camera available")
+                        }
+                    }
+                label:
+                    {
+                        Image(systemName: "camera")
+                            .font(.system(size: 30))
+                            .foregroundColor(Color("LighterGreen"))
+                    }
                     Button{
+                        isPhoto = false
                         showImagePicker.toggle()
                     }
                 label: {
@@ -427,16 +428,13 @@ struct ChatView: View {
                         .cornerRadius(10)
                         .onSubmit {
                             vm.sendMessage()
-                                                       
+                            
                         }
                     
                     if monitor.isConnected{
-                        
-                        
-                        
                         Button {
-                     
-                            vm.saveMessagesCache()
+                            
+                            vm.sendMessage()
                             
                         } label: {
                             Image(systemName: "paperplane.fill")
@@ -447,12 +445,10 @@ struct ChatView: View {
                         .disabled(vm.isMessageTextEmpty)
                         .opacity(vm.isMessageTextEmpty ? 0.5 : 1.0)
                     } else {
-                        
-                        
                         Button {
                             
                             vm.saveMessagesCache()
-                     
+                            
                         } label: {
                             Image(systemName: "paperplane.fill")
                                 .foregroundColor(Color("LighterGreen"))
@@ -460,11 +456,7 @@ struct ChatView: View {
                         .font(.system(size: 26))
                         .padding(.horizontal, 10)
                         .opacity(vm.isMessageTextEmpty ? 0.5 : 1.0)
-                     
-                        
                     }
-                    
-                    
                 }
                 .padding()
                 .background(Color.white)
@@ -472,11 +464,11 @@ struct ChatView: View {
             .background(Color.gray.opacity(0.08))
             
             
-           
-           
+            
+            
         }
         .fullScreenCover(isPresented: $showImagePicker, onDismiss: nil){
-            ImagePicker(image: $image)}
+            ImagePicker(sourceType: isPhoto ? .camera : .photoLibrary, image: $image)}
         .onChange(of: selectedImage){
             newImage in
             vm.selectedImage = newImage
