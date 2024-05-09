@@ -39,7 +39,7 @@ class ChatViewModel: ObservableObject{
         self.chatUser = chatUser
         self.selectedImage = selectedImage
         fetchMessages()
-        loadMessageCache()
+        
         print(cachedMessage)
         
     }
@@ -170,7 +170,10 @@ class ChatViewModel: ObservableObject{
             cachedMessage = messageText
             messageText = "" // Reset message text after saving
             self.count += 1
-            messageCache.setObject(cachedMessage as String as NSString, forKey: "unsentMessage")
+            
+            let cacheKey = "\(chatUser?.uid ?? "")-\(FirebaseManager.shared.auth.currentUser?.uid ?? "")"
+            print(cacheKey)
+            messageCache.setObject(cachedMessage as NSString, forKey: cacheKey as NSString)
         }
         
         
@@ -179,9 +182,12 @@ class ChatViewModel: ObservableObject{
     }
     
     func loadMessageCache(){
-        if let cachedMessage = messageCache.object(forKey: "unsentMessage") as String? {
-            self.cachedMessage = cachedMessage
-        }
+        let cacheKey = "\(chatUser?.uid ?? "")-\(FirebaseManager.shared.auth.currentUser?.uid ?? "")"
+            if let cachedMessage = messageCache.object(forKey: cacheKey as NSString) as String? {
+                self.cachedMessage = cachedMessage
+            } else {
+                self.cachedMessage = ""
+            }
         
     }
     
@@ -191,7 +197,7 @@ class ChatViewModel: ObservableObject{
         guard let fromId = FirebaseManager.shared.auth.currentUser?.uid else { return }
         guard let toId = chatUser?.uid else { return }
         
-        
+        let cacheKey = "\(toId)-\(fromId)"
         let document = FirebaseManager.shared.firestore.collection("messages").document(fromId).collection(toId).document()
         let messageData = ["fromId": fromId, "toId": toId, "text": cachedMessage, "timeStamp": Timestamp()] as [String : Any]
         
@@ -219,7 +225,7 @@ class ChatViewModel: ObservableObject{
         
         
         // After retrying, remove unsent messages from UserDefaults and reset cachedMessages
-        messageCache.removeObject(forKey: "unsentMessage")
+        messageCache.removeObject(forKey: cacheKey as NSString)
         
         
         
@@ -430,7 +436,7 @@ struct ChatView: View {
                         
                         Button {
                      
-                            vm.sendMessage()
+                            vm.saveMessagesCache()
                             
                         } label: {
                             Image(systemName: "paperplane.fill")
@@ -483,7 +489,11 @@ struct ChatView: View {
             }, label: {
                 
             }))
-            .onAppear{vm.loadMessageCache()}
+            .onAppear{ 
+                vm.loadMessageCache()
+                print(vm.cachedMessage)
+                
+            }
             .onDisappear{ vm.firestoreListener?.remove()}
         
             
