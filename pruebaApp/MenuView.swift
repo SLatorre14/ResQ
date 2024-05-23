@@ -222,21 +222,19 @@ struct MenuView: View {
                                
                                 
                                 
-                                Button{
+                                NavigationLink(destination: MaadReportView()) {
+                                                    Text("Report MAAD Case")
+                                                }
+                             
+                                .font(.footnote)
+                                .foregroundColor(.white)
+                                .bold()
+                                .frame(width: 210, height: 45)
+                                .background{
+                                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                        .fill(Color("LighterGreen"))
                                 }
-                            label:{
-                                Text("Report MAAD Case")
-                                    .font(.footnote)
-                                    .foregroundColor(.white)
-                                    .bold()
-                                    .frame(width: 210, height: 45)
-                                    .background{
-                                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                                            .fill(Color("LighterGreen"))
-                                    }
-                            }
-                            .padding(.top)
-                            .buttonStyle(ScaleButtonStyle())
+                                .padding(.top)
                                 
                                 
                                 
