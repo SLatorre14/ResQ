@@ -6,71 +6,67 @@
 //
 
 import SwiftUI
+import Firebase
+import FirebaseStorage
+import FirebaseFirestore
+import FirebaseAuth
 
 struct MaadReportView: View {
     @AppStorage("reportTitle") private var reportTitle = ""
     @AppStorage("reportDescription") private var reportDescription = ""
-    @AppStorage("isUrgent") private var isUrgent = false
-    @AppStorage("selectedCaseType") private var selectedCaseType = "" // Inicialmente vacío para forzar una selección
+    @AppStorage("selectedCaseType") private var selectedCaseType = ""
 
     @State private var incidentDate = Date()
-    @State private var showingAlert = false // Controla la visibilidad de la alerta
+    @State private var showingAlert = false
 
     let caseTypes = ["Select a Case Type", "Academic Misconduct", "Bullying", "Harassment", "Discrimination", "Other"]
-
-    init() {
-        if let savedDate = UserDefaults.standard.object(forKey: "incidentDate") as? Date {
-            _incidentDate = State(initialValue: savedDate)
-        }
-    }
+    
+    private var db = Firestore.firestore()
 
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("Case Type")) {
                     Picker("Select Case Type", selection: $selectedCaseType) {
-                        ForEach(caseTypes, id: \.self) {
-                            Text($0)
+                        ForEach(caseTypes, id: \.self) { caseType in
+                            Text(caseType)
                         }
                     }
                     .pickerStyle(MenuPickerStyle())
+                    .foregroundColor(.black)
                 }
                 
                 Section(header: Text("Report Details")) {
                     TextField("Title", text: $reportTitle)
-                    VStack {
-                        HStack { Text("Description:")
-                            Spacer()
-                        }
                         .foregroundColor(.black)
-                        TextEditor(text: $reportDescription)
-                            .frame(minHeight: 100, idealHeight: 150, maxHeight: .infinity)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke(Color.gray, lineWidth: 1)
-                            )
-                    }
+                    TextEditor(text: $reportDescription)
+                        .foregroundColor(.black)
+                        .frame(minHeight: 100, idealHeight: 150, maxHeight: .infinity)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(Color.gray, lineWidth: 1)
+                        )
                     DatePicker("Incident Date", selection: $incidentDate, displayedComponents: .date)
+                        .foregroundColor(.black)
                         .onChange(of: incidentDate) { newValue in
                             UserDefaults.standard.set(newValue, forKey: "incidentDate")
                         }
-                    Toggle("Urgent", isOn: $isUrgent)
                 }
 
                 Section {
                     Button("Submit Report") {
                         validateAndSubmitReport()
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color("LighterGreen"))
+                    .background(Color("LightGreen"))
+                    .foregroundColor(.white)
                     .cornerRadius(10)
                 }
             }
             .navigationTitle("Report MAAD Case")
             .alert(isPresented: $showingAlert) {
-                Alert(title: Text("Campos incompletos"), message: Text("Please fill in all required fields and select a case type."), dismissButton: .default(Text("OK")))
+                Alert(title: Text("Empty fields"), message: Text("Please fill in all required fields and select a case type."), dismissButton: .default(Text("OK")))
             }
         }
     }
@@ -79,7 +75,29 @@ struct MaadReportView: View {
         if reportTitle.isEmpty || reportDescription.isEmpty || selectedCaseType.isEmpty || selectedCaseType == "Select a Case Type" {
             showingAlert = true
         } else {
-            print("Report submitted: \(reportTitle), Case Type: \(selectedCaseType)")
+            let userEmail = Auth.auth().currentUser?.email ?? "Unknown email"
+            let data: [String: Any] = [
+                "title": reportTitle,
+                "description": reportDescription,
+                "incidentDate": incidentDate,
+                "caseType": selectedCaseType,
+                "status": "Pending",
+                "userEmail": userEmail
+            ]
+            
+            db.collection("reports").addDocument(data: data) { error in
+                if let error = error {
+                    print("Error writing document: \(error)")
+                } else {
+                    print("Document successfully written!")
+                }
+            }
+            reportTitle = ""
+            reportDescription = ""
+            selectedCaseType = ""
+            incidentDate = Date()
+            
+            
         }
     }
 }
@@ -89,3 +107,4 @@ struct MaadReportView_Previews: PreviewProvider {
         MaadReportView()
     }
 }
+
