@@ -47,7 +47,6 @@ final class CarrusselViewModel: ObservableObject{
     private func fetchAllNews() async {
         do {
             let documentsSnapshot = try await FirebaseManager.shared.firestore.collection("news").getDocuments()
-            
             var fetchedNews = [Card]()
             documentsSnapshot.documents.forEach { snapshot in
                 let data = snapshot.data()
@@ -225,7 +224,7 @@ struct MenuView: View {
                                
                                 
                                 
-                                NavigationLink(destination: MaadReportView()) {
+                                NavigationLink(destination: ReportsMenuView()) {
                                                     Text("Report MAAD Case")
                                                 }
                              
