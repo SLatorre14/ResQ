@@ -42,10 +42,13 @@
 		88FBB18F2BAB986500B4E390 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FBB18E2BAB986400B4E390 /* RootView.swift */; };
 		88FBB1922BAB988C00B4E390 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FBB1902BAB988A00B4E390 /* AuthenticationManager.swift */; };
 		88FBB1932BAB988C00B4E390 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FBB1912BAB988B00B4E390 /* SignInView.swift */; };
+		9B48EB092C015953007AA7C4 /* MAAD-Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B48EB082C015953007AA7C4 /* MAAD-Menu.swift */; };
+		9B48EB0B2C015B27007AA7C4 /* MAAD-Reports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B48EB0A2C015B27007AA7C4 /* MAAD-Reports.swift */; };
 		9B5F24202BA38E2F00BD3CAB /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5F241F2BA38E2F00BD3CAB /* MenuView.swift */; };
 		9B5F24242BA3970900BD3CAB /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5F24232BA3970900BD3CAB /* ChatView.swift */; };
 		9B8332282BDC50B4001645A5 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8332272BDC50B4001645A5 /* NetworkMonitor.swift */; };
 		CE19E8D22C0417A900F5D181 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE19E8D12C0417A900F5D181 /* NewsView.swift */; };
+		9BCE29BC2BFEBD6300EBBF59 /* MAAD-Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCE29BB2BFEBD6300EBBF59 /* MAAD-Case.swift */; };
 		CE59BD9F2BAB726C00F20208 /* PageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59BD9E2BAB726C00F20208 /* PageModel.swift */; };
 		CE59BDA12BAB756F00F20208 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59BDA02BAB756F00F20208 /* PageView.swift */; };
 		CE59BDA32BABCCF500F20208 /* SlideintoScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59BDA22BABCCF500F20208 /* SlideintoScreenView.swift */; };
@@ -71,10 +74,13 @@
 		88FBB1902BAB988A00B4E390 /* AuthenticationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		88FBB1912BAB988B00B4E390 /* SignInView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		88FBB1942BAB9AE300B4E390 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9B48EB082C015953007AA7C4 /* MAAD-Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MAAD-Menu.swift"; sourceTree = "<group>"; };
+		9B48EB0A2C015B27007AA7C4 /* MAAD-Reports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MAAD-Reports.swift"; sourceTree = "<group>"; };
 		9B5F241F2BA38E2F00BD3CAB /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		9B5F24232BA3970900BD3CAB /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		9B8332272BDC50B4001645A5 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		CE19E8D12C0417A900F5D181 /* NewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsView.swift; sourceTree = "<group>"; };
+		9BCE29BB2BFEBD6300EBBF59 /* MAAD-Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MAAD-Case.swift"; sourceTree = "<group>"; };
 		CE59BD9E2BAB726C00F20208 /* PageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageModel.swift; sourceTree = "<group>"; };
 		CE59BDA02BAB756F00F20208 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		CE59BDA22BABCCF500F20208 /* SlideintoScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideintoScreenView.swift; sourceTree = "<group>"; };
@@ -153,6 +159,9 @@
 				CE19E8D12C0417A900F5D181 /* NewsView.swift */,
 				88FBB18E2BAB986400B4E390 /* RootView.swift */,
 				CE59BD9E2BAB726C00F20208 /* PageModel.swift */,
+				9BCE29BB2BFEBD6300EBBF59 /* MAAD-Case.swift */,
+				9B48EB082C015953007AA7C4 /* MAAD-Menu.swift */,
+				9B48EB0A2C015B27007AA7C4 /* MAAD-Reports.swift */,
 				888E98062B94E0FF000907D8 /* pruebaAppApp.swift */,
 				9B8332272BDC50B4001645A5 /* NetworkMonitor.swift */,
 				CE59BDA02BAB756F00F20208 /* PageView.swift */,
@@ -310,8 +319,11 @@
 				888E98072B94E0FF000907D8 /* pruebaAppApp.swift in Sources */,
 				CE59BD9F2BAB726C00F20208 /* PageModel.swift in Sources */,
 				88AD8B4A2BC5BF6400E96491 /* ImagePicker.swift in Sources */,
+				9BCE29BC2BFEBD6300EBBF59 /* MAAD-Case.swift in Sources */,
 				88DC86E82BC8236B00D9A95C /* MessageOwner.swift in Sources */,
+				9B48EB0B2C015B27007AA7C4 /* MAAD-Reports.swift in Sources */,
 				9B8332282BDC50B4001645A5 /* NetworkMonitor.swift in Sources */,
+				9B48EB092C015953007AA7C4 /* MAAD-Menu.swift in Sources */,
 				880DF4992BA52EE100762F6D /* AuthenticationView.swift in Sources */,
 				CE59BDA12BAB756F00F20208 /* PageView.swift in Sources */,
 			);

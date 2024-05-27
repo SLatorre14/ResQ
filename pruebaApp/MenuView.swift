@@ -13,7 +13,7 @@ import CoreMotion
 final class CarrusselViewModel: ObservableObject{
     @Published var news = [Card]()
     @Published var errorMessage = ""
-    private let cacheExpirationInterval: TimeInterval = 1200
+    private let cacheExpirationInterval: TimeInterval = 10
     private let cacheKey = "cachedNews"
     
     
@@ -47,7 +47,6 @@ final class CarrusselViewModel: ObservableObject{
     private func fetchAllNews() async {
         do {
             let documentsSnapshot = try await FirebaseManager.shared.firestore.collection("news").getDocuments()
-            
             var fetchedNews = [Card]()
             documentsSnapshot.documents.forEach { snapshot in
                 let data = snapshot.data()
@@ -83,42 +82,51 @@ struct CarrouselView: View{
     
     var body: some View {
         GeometryReader { reader in
-            ZStack{
-                ForEach(vm.news.indices, id: \.self) { index in
-                    VStack(spacing: 1.0){
-                        Text(vm.news[index].title)
-                            .foregroundStyle(.black)
-                    }
-                    .frame(width: screenWidth * widthScale, height: cardHeight)
-                    .background(Color("LightWhite"))
-                    .overlay(Color.white.opacity(1-cardScale(for: index)))
-                    .cornerRadius(20)
-                    .shadow(color: .primary, radius: 12)
-                    .offset(x: cardOffset(for: index))
-                    .scaleEffect(x: cardScale(for: index), y: cardScale(for: index))
-                    .zIndex(-Double(index))
-                    .gesture(
-                        DragGesture().onChanged{ value in
-                            self.dragOffset = value.translation.width
-                        }.onEnded{ value in
-                            let treshold = screenWidth * 0.2
-                            withAnimation {
-                                if value.translation.width < -treshold{
-                                    activeCardIndex = min(activeCardIndex + 1, vm.news.count - 1)
-                                } else if value.translation.width > treshold{
-                                    activeCardIndex = max(activeCardIndex - 1, 0)
+            
+            if vm.news.isEmpty{
+                ProgressView()
+            }
+            else {
+                
+                ZStack{
+                    ForEach(vm.news.indices, id: \.self) { index in
+                        VStack(spacing: 1.0){
+                            Text(vm.news[index].title)
+                                .foregroundStyle(.black)
+                        }
+                        .frame(width: screenWidth * widthScale, height: cardHeight)
+                        .background(Color("LightWhite"))
+                        .overlay(Color.white.opacity(1-cardScale(for: index)))
+                        .cornerRadius(20)
+                        .shadow(color: .primary, radius: 12)
+                        .offset(x: cardOffset(for: index))
+                        .scaleEffect(x: cardScale(for: index), y: cardScale(for: index))
+                        .zIndex(-Double(index))
+                        .gesture(
+                            DragGesture().onChanged{ value in
+                                self.dragOffset = value.translation.width
+                            }.onEnded{ value in
+                                let treshold = screenWidth * 0.2
+                                withAnimation {
+                                    if value.translation.width < -treshold{
+                                        activeCardIndex = min(activeCardIndex + 1, vm.news.count - 1)
+                                    } else if value.translation.width > treshold{
+                                        activeCardIndex = max(activeCardIndex - 1, 0)
+                                    }
                                 }
-                            }
-                            withAnimation{
-                                dragOffset = 0
-                            }                        })
+                                withAnimation{
+                                    dragOffset = 0
+                                }                        })
+                    }
                 }
+                .onAppear{
+                    screenWidth = reader.size.width
+                    cardHeight = screenWidth * widthScale * cardAspectRatio
+                }
+                .offset(x: 16, y: 30)
+                
             }
-            .onAppear{
-                screenWidth = reader.size.width
-                cardHeight = screenWidth * widthScale * cardAspectRatio
-            }
-            .offset(x: 16, y: 30)
+            
         }
         
         
@@ -171,6 +179,8 @@ final class MenuViewModel: ObservableObject{
     func logOut() throws {
         try AuthenticationManager.shared.signUserOut()
     }
+    
+    
 }
 
 
@@ -180,6 +190,7 @@ struct MenuView: View {
     @State var isLoggedIn: Bool = false
     @State var toggleIsOn: Bool = true
     @State var showingAlert: Bool = false
+    @State private var navigateToBrigade: Bool = false
     let motionManager = CMMotionManager()
     @ObservedObject var monitor = NetworkMonitor()
     
@@ -222,21 +233,19 @@ struct MenuView: View {
                                
                                 
                                 
-                                Button{
+                                NavigationLink(destination: ReportsMenuView()) {
+                                                    Text("Report MAAD Case")
+                                                }
+                             
+                                .font(.footnote)
+                                .foregroundColor(.white)
+                                .bold()
+                                .frame(width: 210, height: 45)
+                                .background{
+                                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                        .fill(Color("LighterGreen"))
                                 }
-                            label:{
-                                Text("Report MAAD Case")
-                                    .font(.footnote)
-                                    .foregroundColor(.white)
-                                    .bold()
-                                    .frame(width: 210, height: 45)
-                                    .background{
-                                        RoundedRectangle(cornerRadius: 15, style: .continuous)
-                                            .fill(Color("LighterGreen"))
-                                    }
-                            }
-                            .padding(.top)
-                            .buttonStyle(ScaleButtonStyle())
+                                .padding(.top)
                                 
                                 
                                 
@@ -270,16 +279,30 @@ struct MenuView: View {
                             }
                             
                             VStack{
-                                        }.alert(isPresented: $showingAlert) {
-                                            Alert(title: Text("Shake Detected"), message: Text("You shook your device!"), dismissButton: .default(Text("OK")))
+                                        }.alert("Shake Detected", isPresented: $showingAlert) {
+                                            Button("OK") {
+                                                startCountdown()
+                                            }
+                                        } message: {
+                                            Text("You shook your device! A countdown will start and you will be redirected.")
                                         }
+                                        .onAppear {
+                                            setupMotionDetection()
+                                        }
+                                        .onDisappear {
+                                            motionManager.stopAccelerometerUpdates()
+                                        }
+
+                            
+
                             VStack{
                             }.alert(isPresented: Binding<Bool>(
                                 get:{!monitor.isConnected},
                                 set:{ _ in}
                                 )) {
-                                            Alert(title: Text("Shake Detected"), message: Text("You shook your device!"), dismissButton: .default(Text("OK")))
+                                            Alert(title: Text("NO internet connection"), message: Text("check your internet connection"), dismissButton: .default(Text("OK")))
                                         }
+
                                     }
                                     .onAppear {
                                         if motionManager.isAccelerometerAvailable {
@@ -349,7 +372,29 @@ struct MenuView: View {
                             
                     }
         }.onAppear()
+        
     }
+    func setupMotionDetection() {
+            if motionManager.isAccelerometerAvailable {
+                motionManager.accelerometerUpdateInterval = 0.1
+                motionManager.startAccelerometerUpdates(to: .main) { data, error in
+                    guard let data = data else { return }
+                    
+                    let accelerationThreshold: Double = 1.5
+                    let totalAcceleration = sqrt(pow(data.acceleration.x, 2) + pow(data.acceleration.y, 2) + pow(data.acceleration.z, 2))
+                    
+                    if totalAcceleration >= accelerationThreshold {
+                        showingAlert = true
+                    }
+                }
+            }
+        }
+
+        func startCountdown() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
+                self.navigateToBrigade = true
+            }
+        }
 }
     
     
