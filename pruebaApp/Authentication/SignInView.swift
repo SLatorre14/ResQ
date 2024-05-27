@@ -63,6 +63,76 @@ class FirebaseManager: NSObject {
     
   
     
+struct ResetPasswordView: View {
+    @ObservedObject var monitor = NetworkMonitor()
+    @State private var email = ""
+    @State private var message = ""
+    @Environment(\.presentationMode) var presentationMode
+
+    var body: some View {
+        VStack {
+            if !monitor.isConnected{
+                Text("No Internet Connection")
+                    .foregroundColor(.white)
+                    .padding(8)
+                    .background(Color.red)
+                    .cornerRadius(8)
+            }
+            Text("Reset Password")
+                .font(.largeTitle)
+                .padding()
+
+            TextField("Email", text: $email)
+                .padding()
+                .background(Color.gray.opacity(0.4))
+                .keyboardType(.emailAddress)
+                .autocapitalization(.none)
+                .cornerRadius(10)
+
+            Button(action: resetPassword) {
+                Text("Send Reset Link")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(height: 55)
+                    .frame(maxWidth: .infinity)
+                    .background(Color("LightGreen" ))
+                    .cornerRadius(10)
+                    .padding(.top, 10)
+            }
+
+            if !message.isEmpty {
+                Text(message)
+                    .foregroundColor(.red)
+                    .padding()
+            }
+
+            Spacer()
+
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                Text("Go Back")
+                    .foregroundColor(.blue)
+                    .padding()
+            }
+        }
+        .padding()
+    }
+
+    private func resetPassword() {
+        FirebaseManager.shared.auth.sendPasswordReset(withEmail: email) { error in
+            if let error = error {
+                message = "Failed to send reset link: \(error.localizedDescription)"
+            } else {
+                message = "Reset link sent! Check your email."
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+        }
+    }
+}
+
     
 
 
@@ -154,7 +224,7 @@ final class SignInViewModel: ObservableObject{
 
 var provider = OAuthProvider(providerID: "microsoft.com")
 struct SignInView: View {
-    
+    @State private var showResetPasswordView = false
     var isPasswordValid: Bool {
             let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$"
             let passwordPredicate = NSPredicate(format: "SELF MATCHES %@", passwordRegex)
@@ -257,8 +327,8 @@ struct SignInView: View {
                                 .background(Color("LightGreen" ))
                                 .cornerRadius(10)
                         }
-                        .disabled((!isPasswordValid) && (!isLoginMode) && (!monitor.isConnected) )
-                        .opacity((!isPasswordValid && !isLoginMode && !monitor.isConnected) ? 0.5 : 1.0)
+                        .disabled(((!isPasswordValid) && (!isLoginMode)) || (!monitor.isConnected) )
+                        .opacity((((!isPasswordValid) && (!isLoginMode)) || !monitor.isConnected) ? 0.5 : 1.0)
                     }
                     
                     if isLoginMode{
@@ -284,6 +354,16 @@ struct SignInView: View {
                 }
                 .padding()
                 
+                if isLoginMode {
+                       Button(action: {
+                           showResetPasswordView = true
+                       }) {
+                           Text("Forgot Password?")
+                               .foregroundColor(.blue)
+                               .padding(.top, 10)
+                       }
+                }
+
                 if !isLoginMode{
                     VStack {
                         
@@ -329,6 +409,8 @@ struct SignInView: View {
             
         }.fullScreenCover(isPresented: $showImagePicker, onDismiss: nil){
             ImagePicker(image: $image)
+        }.sheet(isPresented: $showResetPasswordView) {
+            ResetPasswordView()
         }
         
         

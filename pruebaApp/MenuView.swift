@@ -13,7 +13,7 @@ import CoreMotion
 final class CarrusselViewModel: ObservableObject{
     @Published var news = [Card]()
     @Published var errorMessage = ""
-    private let cacheExpirationInterval: TimeInterval = 1200
+    private let cacheExpirationInterval: TimeInterval = 10
     private let cacheKey = "cachedNews"
     
     
@@ -82,42 +82,51 @@ struct CarrouselView: View{
     
     var body: some View {
         GeometryReader { reader in
-            ZStack{
-                ForEach(vm.news.indices, id: \.self) { index in
-                    VStack(spacing: 1.0){
-                        Text(vm.news[index].title)
-                            .foregroundStyle(.black)
-                    }
-                    .frame(width: screenWidth * widthScale, height: cardHeight)
-                    .background(Color("LightWhite"))
-                    .overlay(Color.white.opacity(1-cardScale(for: index)))
-                    .cornerRadius(20)
-                    .shadow(color: .primary, radius: 12)
-                    .offset(x: cardOffset(for: index))
-                    .scaleEffect(x: cardScale(for: index), y: cardScale(for: index))
-                    .zIndex(-Double(index))
-                    .gesture(
-                        DragGesture().onChanged{ value in
-                            self.dragOffset = value.translation.width
-                        }.onEnded{ value in
-                            let treshold = screenWidth * 0.2
-                            withAnimation {
-                                if value.translation.width < -treshold{
-                                    activeCardIndex = min(activeCardIndex + 1, vm.news.count - 1)
-                                } else if value.translation.width > treshold{
-                                    activeCardIndex = max(activeCardIndex - 1, 0)
+            
+            if vm.news.isEmpty{
+                ProgressView()
+            }
+            else {
+                
+                ZStack{
+                    ForEach(vm.news.indices, id: \.self) { index in
+                        VStack(spacing: 1.0){
+                            Text(vm.news[index].title)
+                                .foregroundStyle(.black)
+                        }
+                        .frame(width: screenWidth * widthScale, height: cardHeight)
+                        .background(Color("LightWhite"))
+                        .overlay(Color.white.opacity(1-cardScale(for: index)))
+                        .cornerRadius(20)
+                        .shadow(color: .primary, radius: 12)
+                        .offset(x: cardOffset(for: index))
+                        .scaleEffect(x: cardScale(for: index), y: cardScale(for: index))
+                        .zIndex(-Double(index))
+                        .gesture(
+                            DragGesture().onChanged{ value in
+                                self.dragOffset = value.translation.width
+                            }.onEnded{ value in
+                                let treshold = screenWidth * 0.2
+                                withAnimation {
+                                    if value.translation.width < -treshold{
+                                        activeCardIndex = min(activeCardIndex + 1, vm.news.count - 1)
+                                    } else if value.translation.width > treshold{
+                                        activeCardIndex = max(activeCardIndex - 1, 0)
+                                    }
                                 }
-                            }
-                            withAnimation{
-                                dragOffset = 0
-                            }                        })
+                                withAnimation{
+                                    dragOffset = 0
+                                }                        })
+                    }
                 }
+                .onAppear{
+                    screenWidth = reader.size.width
+                    cardHeight = screenWidth * widthScale * cardAspectRatio
+                }
+                .offset(x: 16, y: 30)
+                
             }
-            .onAppear{
-                screenWidth = reader.size.width
-                cardHeight = screenWidth * widthScale * cardAspectRatio
-            }
-            .offset(x: 16, y: 30)
+            
         }
         
         
@@ -283,6 +292,9 @@ struct MenuView: View {
                                         .onDisappear {
                                             motionManager.stopAccelerometerUpdates()
                                         }
+
+                            
+
                             VStack{
                             }.alert(isPresented: Binding<Bool>(
                                 get:{!monitor.isConnected},
@@ -290,6 +302,7 @@ struct MenuView: View {
                                 )) {
                                             Alert(title: Text("NO internet connection"), message: Text("check your internet connection"), dismissButton: .default(Text("OK")))
                                         }
+
                                     }
                                     .onAppear {
                                         if motionManager.isAccelerometerAvailable {
