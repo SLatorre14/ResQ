@@ -64,6 +64,7 @@ class FirebaseManager: NSObject {
   
 struct ResetPasswordView: View {
     @State private var email = ""
+    @ObservedObject var monitor = NetworkMonitor()
     @State private var message = ""
     @Environment(\.presentationMode) var presentationMode
 
@@ -92,7 +93,8 @@ struct ResetPasswordView: View {
                     .background(Color.blue)
                     .cornerRadius(10)
                     .padding(.top, 10)
-            }
+            }.disabled(!monitor.isConnected)
+                .opacity(!monitor.isConnected ? 0.5 : 1.0)
 
             if !message.isEmpty {
                 Text(message)

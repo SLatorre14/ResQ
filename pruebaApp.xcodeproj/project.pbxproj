@@ -47,11 +47,13 @@
 		9B5F24202BA38E2F00BD3CAB /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5F241F2BA38E2F00BD3CAB /* MenuView.swift */; };
 		9B5F24242BA3970900BD3CAB /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5F24232BA3970900BD3CAB /* ChatView.swift */; };
 		9B8332282BDC50B4001645A5 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8332272BDC50B4001645A5 /* NetworkMonitor.swift */; };
-		CE19E8D22C0417A900F5D181 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE19E8D12C0417A900F5D181 /* NewsView.swift */; };
 		9BCE29BC2BFEBD6300EBBF59 /* MAAD-Case.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCE29BB2BFEBD6300EBBF59 /* MAAD-Case.swift */; };
+		CE19E8D22C0417A900F5D181 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE19E8D12C0417A900F5D181 /* NewsView.swift */; };
 		CE59BD9F2BAB726C00F20208 /* PageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59BD9E2BAB726C00F20208 /* PageModel.swift */; };
 		CE59BDA12BAB756F00F20208 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59BDA02BAB756F00F20208 /* PageView.swift */; };
 		CE59BDA32BABCCF500F20208 /* SlideintoScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59BDA22BABCCF500F20208 /* SlideintoScreenView.swift */; };
+		E8C2ABFF2C071D6200296AB4 /* EmergencyPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C2ABFE2C071D6200296AB4 /* EmergencyPhotoView.swift */; };
+		E8C7026D2C06EC2100907221 /* ReportEmergencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C7026C2C06EC2100907221 /* ReportEmergencyView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,11 +81,13 @@
 		9B5F241F2BA38E2F00BD3CAB /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		9B5F24232BA3970900BD3CAB /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		9B8332272BDC50B4001645A5 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
-		CE19E8D12C0417A900F5D181 /* NewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsView.swift; sourceTree = "<group>"; };
 		9BCE29BB2BFEBD6300EBBF59 /* MAAD-Case.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MAAD-Case.swift"; sourceTree = "<group>"; };
+		CE19E8D12C0417A900F5D181 /* NewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsView.swift; sourceTree = "<group>"; };
 		CE59BD9E2BAB726C00F20208 /* PageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageModel.swift; sourceTree = "<group>"; };
 		CE59BDA02BAB756F00F20208 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		CE59BDA22BABCCF500F20208 /* SlideintoScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideintoScreenView.swift; sourceTree = "<group>"; };
+		E8C2ABFE2C071D6200296AB4 /* EmergencyPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyPhotoView.swift; sourceTree = "<group>"; };
+		E8C7026C2C06EC2100907221 /* ReportEmergencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportEmergencyView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +177,8 @@
 				888E980C2B94E102000907D8 /* Preview Content */,
 				883ED5B72BACBCA500DF9FC1 /* MapView.swift */,
 				88AD8B492BC5BF6400E96491 /* ImagePicker.swift */,
+				E8C7026C2C06EC2100907221 /* ReportEmergencyView.swift */,
+				E8C2ABFE2C071D6200296AB4 /* EmergencyPhotoView.swift */,
 			);
 			path = pruebaApp;
 			sourceTree = "<group>";
@@ -315,9 +321,11 @@
 				88FBB1932BAB988C00B4E390 /* SignInView.swift in Sources */,
 				9B5F24202BA38E2F00BD3CAB /* MenuView.swift in Sources */,
 				887624642BB8BD82003F12EC /* NewMessageView.swift in Sources */,
+				E8C2ABFF2C071D6200296AB4 /* EmergencyPhotoView.swift in Sources */,
 				88DC86EF2BC825A500D9A95C /* ChatMessageBot.swift in Sources */,
 				888E98072B94E0FF000907D8 /* pruebaAppApp.swift in Sources */,
 				CE59BD9F2BAB726C00F20208 /* PageModel.swift in Sources */,
+				E8C7026D2C06EC2100907221 /* ReportEmergencyView.swift in Sources */,
 				88AD8B4A2BC5BF6400E96491 /* ImagePicker.swift in Sources */,
 				9BCE29BC2BFEBD6300EBBF59 /* MAAD-Case.swift in Sources */,
 				88DC86E82BC8236B00D9A95C /* MessageOwner.swift in Sources */,
@@ -460,7 +468,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pruebaApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ResQ;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "ResQApp wants to use ur photos";
+				INFOPLIST_KEY_NSCameraUsageDescription = "ResqApp wants to use ur camera";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "ResQ needs your location to show in the map";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need to access the library to choose photos";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -494,7 +506,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = pruebaApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ResQ;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "ResQApp wants to use ur photos";
+				INFOPLIST_KEY_NSCameraUsageDescription = "ResqApp wants to use ur camera";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "ResQ needs your location to show in the map";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need to access the library to choose photos";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

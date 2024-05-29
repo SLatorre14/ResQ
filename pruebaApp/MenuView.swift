@@ -198,7 +198,8 @@ struct MenuView: View {
         NavigationView {
         
                 VStack{
-                    ZStack{
+                    ZStack {
+                        
                         RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
                             .fill(Color("LightWhite"))
                             .frame(width:290,height:40)
@@ -206,7 +207,16 @@ struct MenuView: View {
                             .font(.caption)
                             .foregroundColor(.black)
                         
-                      
+                        // Emergency button
+                        HStack {
+                            Spacer()
+                            NavigationLink(destination: ReportEmergencyView()) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.red)
+                                    .font(.title)
+                                    .padding()
+                            }
+                        }
                     }
                     
                     CarrouselView()
