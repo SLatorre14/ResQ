@@ -62,22 +62,16 @@ class FirebaseManager: NSObject {
 }
     
   
-    
 struct ResetPasswordView: View {
-    @ObservedObject var monitor = NetworkMonitor()
     @State private var email = ""
     @State private var message = ""
     @Environment(\.presentationMode) var presentationMode
 
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+
     var body: some View {
         VStack {
-            if !monitor.isConnected{
-                Text("No Internet Connection")
-                    .foregroundColor(.white)
-                    .padding(8)
-                    .background(Color.red)
-                    .cornerRadius(8)
-            }
             Text("Reset Password")
                 .font(.largeTitle)
                 .padding()
@@ -95,7 +89,7 @@ struct ResetPasswordView: View {
                     .foregroundColor(.white)
                     .frame(height: 55)
                     .frame(maxWidth: .infinity)
-                    .background(Color("LightGreen" ))
+                    .background(Color.blue)
                     .cornerRadius(10)
                     .padding(.top, 10)
             }
@@ -117,22 +111,54 @@ struct ResetPasswordView: View {
             }
         }
         .padding()
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
     }
 
     private func resetPassword() {
-        FirebaseManager.shared.auth.sendPasswordReset(withEmail: email) { error in
-            if let error = error {
-                message = "Failed to send reset link: \(error.localizedDescription)"
-            } else {
-                message = "Reset link sent! Check your email."
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    presentationMode.wrappedValue.dismiss()
+        DispatchQueue.global(qos: .userInitiated).async {
+            let firestore = Firestore.firestore()
+            let usersRef = firestore.collection("users")
+            let query = usersRef.whereField("email", isEqualTo: email)
+
+            query.getDocuments { snapshot, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        message = "Error checking user: \(error.localizedDescription)"
+                        showAlert = true
+                        alertMessage = message
+                        return
+                    }
+
+                    guard let documents = snapshot?.documents, !documents.isEmpty else {
+                        message = "User not valid"
+                        showAlert = true
+                        alertMessage = message
+                        return
+                    }
+
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        FirebaseManager.shared.auth.sendPasswordReset(withEmail: email) { error in
+                            DispatchQueue.main.async {
+                                if let error = error {
+                                    message = "Failed to send reset link: \(error.localizedDescription)"
+                                    showAlert = true
+                                    alertMessage = message
+                                } else {
+                                    message = "Reset link sent! Check your email."
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        presentationMode.wrappedValue.dismiss()
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
-
     
 
 
