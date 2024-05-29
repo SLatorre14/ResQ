@@ -20,7 +20,7 @@ struct NewsView: View {
                 Spacer()
                 Text("Este es el párrafo que explica la imagen. Aquí puedes proporcionar información detallada sobre lo que se muestra en la imagen.")
                     .padding()
-                    .background(Color.white.opacity(0.8))
+                    .background(Color.opacity(0.8))
                     .cornerRadius(10)
                     .padding()
             }

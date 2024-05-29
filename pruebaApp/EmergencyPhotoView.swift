@@ -13,6 +13,7 @@ struct EmergencyPhotoView: View {
             Text("Emergency Photos")
                 .font(.largeTitle)
                 .padding()
+                .foreground(.black)
             
             if isLoading {
                 ProgressView()
